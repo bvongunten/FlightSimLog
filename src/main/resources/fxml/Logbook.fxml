@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="672.0" prefWidth="1229.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.nostromo.flightsimlog.fxui.LogbookController">
+   <children>
+      <ChoiceBox fx:id="cbCategories" layoutX="135.0" layoutY="36.0" prefHeight="25.0" prefWidth="216.0" />
+      <Label layoutX="34.0" layoutY="40.0" prefHeight="17.0" prefWidth="91.0" text="Category Filter" />
+      <BorderPane fx:id="paneFlights" layoutX="25.0" layoutY="80.0" prefHeight="471.0" prefWidth="1167.0" />
+      <Button fx:id="btnCreateFlight" layoutX="25.0" layoutY="565.0" mnemonicParsing="false" onAction="#onCreateFlight" prefHeight="25.0" prefWidth="100.0" text="Create Flight" />
+      <Button fx:id="btnAutotracker" layoutX="143.0" layoutY="565.0" mnemonicParsing="false" onAction="#onAutotracker" prefHeight="25.0" prefWidth="100.0" text="Autotracker" />
+      <Button fx:id="btnGeoJsonPath" layoutX="25.0" layoutY="609.0" mnemonicParsing="false" onAction="#onGeoJsonPath" prefHeight="25.0" prefWidth="100.0" text="GeoJson Paths" />
+      <Button fx:id="btnGeoJsonAirport" layoutX="143.0" layoutY="609.0" mnemonicParsing="false" onAction="#onGeoJsonAirport" prefHeight="25.0" prefWidth="100.0" text="GeoJson AP" />
+      <Button layoutX="559.0" layoutY="609.0" mnemonicParsing="false" onAction="#onSettings" prefHeight="25.0" prefWidth="100.0" text="Settings" />
+      <Button layoutX="839.0" layoutY="609.0" mnemonicParsing="false" onAction="#onNewLogbook" prefHeight="25.0" prefWidth="100.0" text="New Logbook" />
+      <Button layoutX="950.0" layoutY="609.0" mnemonicParsing="false" onAction="#onLoad" prefHeight="25.0" prefWidth="100.0" text="Load Logbook" />
+      <Button layoutX="1092.0" layoutY="609.0" mnemonicParsing="false" onAction="#onQuit" prefHeight="25.0" prefWidth="100.0" text="Quit" />
+      <Button fx:id="btnCategories" layoutX="446.0" layoutY="609.0" mnemonicParsing="false" onAction="#onCategories" prefHeight="25.0" prefWidth="100.0" text="Categories" />
+   </children>
+</Pane>

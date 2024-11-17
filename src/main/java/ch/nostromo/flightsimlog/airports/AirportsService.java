@@ -4,8 +4,6 @@ import ch.nostromo.flightsimlog.data.coordinates.Coordinates;
 import ch.nostromo.flightsimlog.utils.CsvContent;
 import ch.nostromo.flightsimlog.utils.GeoTools;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;

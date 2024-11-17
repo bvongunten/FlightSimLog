@@ -1,6 +1,6 @@
 package ch.nostromo.flightsimlog.data;
 
-import ch.nostromo.flightsimlog.data.base.Aircraft;
+import ch.nostromo.flightsimlog.data.base.SimAircraft;
 import ch.nostromo.flightsimlog.data.base.Category;
 import ch.nostromo.flightsimlog.data.base.FlightSim;
 import ch.nostromo.flightsimlog.data.flight.Flight;
@@ -38,9 +38,9 @@ public class Logbook {
     @XmlElement(name = "category")
     public List<Category> categories = new ArrayList<>();
 
-    @XmlElementWrapper(name = "aircraft")
-    @XmlElement(name = "aircraft")
-    public List<Aircraft> aircraft = new ArrayList<>();
+    @XmlElementWrapper(name = "simAircraft")
+    @XmlElement(name = "simAircraft")
+    public List<SimAircraft> simAircraft = new ArrayList<>();
 
     @XmlElementWrapper(name = "flights")
     @XmlElement(name = "flight")
@@ -58,10 +58,10 @@ public class Logbook {
         throw new IllegalArgumentException("Unknown ID: " + id);
     }
 
-    public List<Aircraft> getSortedAircraft() {
-        List<Aircraft> result = new ArrayList<>(aircraft);
+    public List<SimAircraft> getSortedAircraft() {
+        List<SimAircraft> result = new ArrayList<>(simAircraft);
 
-        result.sort(Comparator.comparing(Aircraft::getDescription));
+        result.sort(Comparator.comparing(SimAircraft::getDescription));
 
         return result;
     }

@@ -2,7 +2,7 @@ package ch.nostromo.flightsimlog.utils;
 
 import ch.nostromo.flightsimlog.FlightSimLogException;
 import ch.nostromo.flightsimlog.data.Logbook;
-import ch.nostromo.flightsimlog.data.base.Aircraft;
+import ch.nostromo.flightsimlog.data.base.SimAircraft;
 import ch.nostromo.flightsimlog.data.base.Category;
 import ch.nostromo.flightsimlog.data.flight.Flight;
 import ch.nostromo.flightsimlog.data.flight.SimulationData;
@@ -17,7 +17,7 @@ public class LogBookTools {
 
     public static void saveXml(Logbook logbook) {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Logbook.class, Flight.class, Aircraft.class, Category.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(Logbook.class, Flight.class, SimAircraft.class, Category.class);
 
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -30,7 +30,7 @@ public class LogBookTools {
 
     public static Logbook loadXml(File file) {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Logbook.class, Flight.class, Aircraft.class, Category.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(Logbook.class, Flight.class, SimAircraft.class, Category.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
             Logbook result = (Logbook) unmarshaller.unmarshal(file);

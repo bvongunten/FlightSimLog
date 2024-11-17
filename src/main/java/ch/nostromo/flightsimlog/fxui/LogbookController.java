@@ -5,6 +5,7 @@ import ch.nostromo.flightsimlog.FlightSimLogController;
 import ch.nostromo.flightsimlog.data.Logbook;
 import ch.nostromo.flightsimlog.data.base.Category;
 import ch.nostromo.flightsimlog.data.flight.Flight;
+import ch.nostromo.flightsimlog.statistics.Statistics;
 import ch.nostromo.flightsimlog.tracker.autotracker.AutoTracker;
 import ch.nostromo.flightsimlog.tracker.autotracker.AutoTrackerListener;
 import ch.nostromo.flightsimlog.utils.ClipboardTools;
@@ -50,6 +51,8 @@ public class LogbookController {
     @FXML
     Button btnCategories;
 
+    @FXML
+    Button btnStatistics;
 
     Logbook logbook = null;
 
@@ -68,6 +71,7 @@ public class LogbookController {
             btnGeoJsonAirport.setDisable(false);
             btnCreateFlight.setDisable(false);
             btnCategories.setDisable(false);
+            btnStatistics.setDisable(false);
             cbCategories.setDisable(false);
         } else {
             btnAutotracker.setDisable(true);
@@ -75,6 +79,7 @@ public class LogbookController {
             btnGeoJsonAirport.setDisable(true);
             btnCreateFlight.setDisable(true);
             btnCategories.setDisable(true);
+            btnStatistics.setDisable(false);
             cbCategories.setDisable(true);
         }
 
@@ -134,7 +139,7 @@ public class LogbookController {
 
         TableColumn aircraftCol = new TableColumn("Aircraft");
         aircraftCol.setMinWidth(50);
-        aircraftCol.setCellValueFactory(new PropertyValueFactory<Flight, String>("aircraft"));
+        aircraftCol.setCellValueFactory(new PropertyValueFactory<Flight, String>("simAircraft"));
 
         TableColumn fromCol = new TableColumn("From");
         fromCol.setMinWidth(50);
@@ -221,8 +226,13 @@ public class LogbookController {
     }
 
     @FXML
+    void onStatistics(ActionEvent event) {
+        Statistics.createStatistics(logbook.getFilteredFlightList(currentFilter));
+    }
+
+    @FXML
     void onNewLogbook(ActionEvent event) {
-        this.logbook =  FlightSimLogController.getInstance().newLogbookManually();
+        this.logbook = FlightSimLogController.getInstance().newLogbookManually();
         this.setLogbook(logbook, currentFilter);
     }
 
@@ -265,7 +275,7 @@ public class LogbookController {
 
         try {
             autoTracker.stopTracker();
-        } catch ( Exception ignored ) {
+        } catch (Exception ignored) {
             // tried our best ;)
         }
 

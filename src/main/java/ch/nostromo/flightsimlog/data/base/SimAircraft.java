@@ -1,6 +1,7 @@
 package ch.nostromo.flightsimlog.data.base;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.*;
@@ -10,7 +11,8 @@ import javax.xml.bind.annotation.*;
 @Data
 @NoArgsConstructor
 @XmlRootElement
-public class Aircraft {
+@EqualsAndHashCode(callSuper=false)
+public class SimAircraft {
 
     @XmlID
     String id;

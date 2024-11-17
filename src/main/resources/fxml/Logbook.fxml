@@ -20,5 +20,6 @@
       <Button layoutX="950.0" layoutY="609.0" mnemonicParsing="false" onAction="#onLoad" prefHeight="25.0" prefWidth="100.0" text="Load Logbook" />
       <Button layoutX="1092.0" layoutY="609.0" mnemonicParsing="false" onAction="#onQuit" prefHeight="25.0" prefWidth="100.0" text="Quit" />
       <Button fx:id="btnCategories" layoutX="446.0" layoutY="609.0" mnemonicParsing="false" onAction="#onCategories" prefHeight="25.0" prefWidth="100.0" text="Categories" />
+      <Button fx:id="btnStatistics" layoutX="260.0" layoutY="609.0" mnemonicParsing="false" onAction="#onStatistics" prefHeight="25.0" prefWidth="100.0" text="Statistics" />
    </children>
 </Pane>

@@ -1,6 +1,6 @@
 package ch.nostromo.flightsimlog.data.flight;
 
-import ch.nostromo.flightsimlog.data.base.Aircraft;
+import ch.nostromo.flightsimlog.data.base.SimAircraft;
 import ch.nostromo.flightsimlog.data.base.Category;
 import ch.nostromo.flightsimlog.data.base.FlightSim;
 import ch.nostromo.flightsimlog.data.coordinates.WorldPosition;
@@ -29,7 +29,7 @@ public class Flight {
     FlightSim flightSim = null;
 
     @XmlIDREF
-    Aircraft aircraft = null;
+    SimAircraft simAircraft = null;
 
     @XmlIDREF
     Category category = null;
@@ -70,7 +70,7 @@ public class Flight {
 
         id = input.getId();
         flightSim = input.flightSim;
-        aircraft = input.aircraft;
+        simAircraft = input.simAircraft;
         category = input.category;
         description = input.description;
         departurePosition.setIcao(input.departurePosition.getIcao());

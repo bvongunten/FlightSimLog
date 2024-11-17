@@ -86,7 +86,7 @@ public class GeoJson {
             line.getCoordinates().add(new LngLatAlt(flight.getArrivalPosition().getCoordLon(), flight.getArrivalPosition().getCoordLat()));
         }
 
-        feature.setProperty("title", flight.getAircraft().getDescription() + " ( " + flight.getFormatedDistance() + ")");
+        feature.setProperty("title", flight.getSimAircraft().getDescription() + " ( " + flight.getFormatedDistance() + ")");
 
         feature.setGeometry(line);
         featureCollection.add(feature);

@@ -1,16 +1,15 @@
 package ch.nostromo.flightsimlog.tracker.autotracker;
 
 import ch.nostromo.flightsimlog.FlightSimLogConfig;
-import ch.nostromo.flightsimlog.FlightSimLogException;
 import ch.nostromo.flightsimlog.FlightSimLogController;
+import ch.nostromo.flightsimlog.FlightSimLogException;
 import ch.nostromo.flightsimlog.airports.Airport;
 import ch.nostromo.flightsimlog.airports.AirportsService;
-import ch.nostromo.flightsimlog.data.base.Aircraft;
+import ch.nostromo.flightsimlog.data.base.SimAircraft;
 import ch.nostromo.flightsimlog.data.coordinates.SimulationMeasurement;
 import ch.nostromo.flightsimlog.data.coordinates.WorldPosition;
 import ch.nostromo.flightsimlog.data.flight.Flight;
 import ch.nostromo.flightsimlog.data.flight.SimulationData;
-import ch.nostromo.flightsimlog.fxui.FlightController;
 import ch.nostromo.flightsimlog.tracker.TrackerData;
 import ch.nostromo.flightsimlog.tracker.TrackerListener;
 import ch.nostromo.flightsimlog.tracker.simconnect.SimConnectTracker;
@@ -56,6 +55,8 @@ public class AutoTracker implements TrackerListener {
     }
 
     private void descisionMaker() {
+
+
         if (inFlight) {
             if (lastFile.contains("MainMenu")) {
                 inFlight = false;
@@ -74,6 +75,7 @@ public class AutoTracker implements TrackerListener {
 
     @Override
     public void onData(TrackerData data) {
+
         if (inFlight && currentFlight != null) {
             currentFlight.getSimulationData().addTrackerData(data);
         }
@@ -154,8 +156,8 @@ public class AutoTracker implements TrackerListener {
 
             // Aircraft
             if (simulationData.getAircraft() != null && !simulationData.getAircraft().isEmpty()) {
-                Aircraft aircraft = FlightSimLogController.getInstance().getOrCreateAircraft(simulationData.getAircraft());
-                currentFlight.setAircraft(aircraft);
+                SimAircraft simAircraft = FlightSimLogController.getInstance().getOrCreateAircraft(simulationData.getAircraft());
+                currentFlight.setSimAircraft(simAircraft);
             }
 
 
@@ -183,7 +185,7 @@ public class AutoTracker implements TrackerListener {
 
             currentFlight.setComputerArrivalTime(Calendar.getInstance());
 
-            currentFlight.setDescription("Auto tracker - " + currentFlight.getDeparturePosition().getDescription() + " to " + currentFlight.getArrivalPosition().getDescription());
+            currentFlight.setDescription(currentFlight.getDeparturePosition().getDescription() + " to " + currentFlight.getArrivalPosition().getDescription());
 
 
             try {

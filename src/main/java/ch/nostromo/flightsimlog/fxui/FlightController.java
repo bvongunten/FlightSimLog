@@ -6,7 +6,7 @@ import ch.nostromo.flightsimlog.FlightSimLogController;
 import ch.nostromo.flightsimlog.FlightSimLogException;
 import ch.nostromo.flightsimlog.airports.Airport;
 import ch.nostromo.flightsimlog.airports.AirportsService;
-import ch.nostromo.flightsimlog.data.base.Aircraft;
+import ch.nostromo.flightsimlog.data.base.SimAircraft;
 import ch.nostromo.flightsimlog.data.base.Category;
 import ch.nostromo.flightsimlog.data.base.FlightSim;
 import ch.nostromo.flightsimlog.data.coordinates.SimulationMeasurement;
@@ -42,7 +42,7 @@ public class FlightController {
     private TextField txtDescription;
 
     @FXML
-    private ComboBox<Aircraft> cbAircraft;
+    private ComboBox<SimAircraft> cbAircraft;
 
     @FXML
     private TextField txtDepartureICAO;
@@ -127,8 +127,8 @@ public class FlightController {
         cbAircraft.setEditable(true);
         cbAircraft.getEditor().setId("txtAircraft");
 
-        for (Aircraft aircraft : FlightSimLogController.getInstance().getAircraft()) {
-            cbAircraft.getItems().add(aircraft);
+        for (SimAircraft simAircraft : FlightSimLogController.getInstance().getAircraft()) {
+            cbAircraft.getItems().add(simAircraft);
         }
 
 
@@ -136,8 +136,8 @@ public class FlightController {
         this.cbCategories.getSelectionModel().select(flight.getCategory());
         this.cbFlightSim.getSelectionModel().select(flight.getFlightSim());
 
-        if (flight.getAircraft() != null) {
-            this.cbAircraft.getSelectionModel().select(flight.getAircraft());
+        if (flight.getSimAircraft() != null) {
+            this.cbAircraft.getSelectionModel().select(flight.getSimAircraft());
         } else {
             this.cbAircraft.getEditor().setText("");
         }
@@ -247,7 +247,7 @@ public class FlightController {
             flight.setComputerDepartureTime(CalendarTools.stringToCal(txtComputerDepartureTime.getText(), false));
             flight.setComputerArrivalTime(CalendarTools.stringToCal(txtComputerArrivalTime.getText(), false));
 
-            flight.setAircraft(FlightSimLogController.getInstance().getOrCreateAircraft(cbAircraft.getEditor().getText()));
+            flight.setSimAircraft(FlightSimLogController.getInstance().getOrCreateAircraft(cbAircraft.getEditor().getText()));
 
         } catch (Exception e) {
             FlightSimLogController.getInstance().showWarning("Bind failed with error: " + e.getMessage());

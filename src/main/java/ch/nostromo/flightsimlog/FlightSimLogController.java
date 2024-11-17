@@ -1,7 +1,7 @@
 package ch.nostromo.flightsimlog;
 
 import ch.nostromo.flightsimlog.data.Logbook;
-import ch.nostromo.flightsimlog.data.base.Aircraft;
+import ch.nostromo.flightsimlog.data.base.SimAircraft;
 import ch.nostromo.flightsimlog.data.base.Category;
 import ch.nostromo.flightsimlog.data.flight.Flight;
 import ch.nostromo.flightsimlog.fxui.CategoriesDialog;
@@ -120,26 +120,26 @@ public class FlightSimLogController {
         return logbook.getCategories();
     }
 
-    public List<Aircraft> getAircraft() {
+    public List<SimAircraft> getAircraft() {
         return logbook.getSortedAircraft();
     }
 
-    public Aircraft getOrCreateAircraft(String aircraftName) {
+    public SimAircraft getOrCreateAircraft(String aircraftName) {
         if (aircraftName == null || aircraftName.isEmpty()) {
             throw new IllegalArgumentException("Aircraft name cannot be null or empty");
         }
 
-        for (Aircraft aircraft : logbook.getAircraft()) {
-            if (aircraft.getDescription().equalsIgnoreCase(aircraftName)) {
-                return aircraft;
+        for (SimAircraft simAircraft : logbook.getSimAircraft()) {
+            if (simAircraft.getDescription().equalsIgnoreCase(aircraftName)) {
+                return simAircraft;
             }
         }
 
-        Aircraft result = new Aircraft();
+        SimAircraft result = new SimAircraft();
         result.setId(logbook.getNextAircraftId());
         result.setDescription(aircraftName);
 
-        logbook.getAircraft().add(result);
+        logbook.getSimAircraft().add(result);
 
         return result;
     }

@@ -1,4 +1,4 @@
-package ch.nostromo.flightsimlog.fxui;
+package ch.nostromo.flightsimlog.fxui.dialogs;
 
 import ch.nostromo.flightsimlog.FlightSimLogController;
 import ch.nostromo.flightsimlog.data.base.Category;

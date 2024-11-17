@@ -6,6 +6,8 @@ import ch.nostromo.flightsimlog.data.base.SimAircraft;
 import ch.nostromo.flightsimlog.data.base.Category;
 import ch.nostromo.flightsimlog.data.flight.Flight;
 import ch.nostromo.flightsimlog.fxui.*;
+import ch.nostromo.flightsimlog.fxui.dialogs.CategoriesDialog;
+import ch.nostromo.flightsimlog.fxui.dialogs.SettingsDialog;
 import ch.nostromo.flightsimlog.utils.ClipboardTools;
 import ch.nostromo.flightsimlog.utils.LogBookTools;
 import javafx.fxml.FXMLLoader;

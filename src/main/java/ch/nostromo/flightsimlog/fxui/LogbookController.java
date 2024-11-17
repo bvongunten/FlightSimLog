@@ -11,6 +11,7 @@ import ch.nostromo.flightsimlog.tracker.autotracker.AutoTracker;
 import ch.nostromo.flightsimlog.tracker.autotracker.AutoTrackerListener;
 import ch.nostromo.flightsimlog.utils.GeoJson;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -24,6 +25,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -115,7 +118,7 @@ public class LogbookController {
         table.setItems(data);
 
         TableColumn<Flight, String> pcDepartureTime = new TableColumn<>("Computer Time");
-        pcDepartureTime.setCellValueFactory(new PropertyValueFactory<>("formatedComputerDepartureTime"));
+        pcDepartureTime.setCellValueFactory(flightStringCellDataFeatures -> new ReadOnlyObjectWrapper<>(new SimpleDateFormat("yyyy.MM.dd HH:mm").format(flightStringCellDataFeatures.getValue().getComputerDepartureTime().getTime())));
         table.getColumns().add(pcDepartureTime);
 
         TableColumn<Flight, String> description = new TableColumn<>("Description");
@@ -128,11 +131,24 @@ public class LogbookController {
         table.getColumns().add(category);
 
         TableColumn<Flight, Double> distance = new TableColumn<>("Distance");
-        distance.setCellValueFactory(new PropertyValueFactory<>("formatedDistance"));
+        distance.setCellValueFactory(flightDoubleCellDataFeatures -> {
+            DecimalFormat df = new DecimalFormat("####0.00");
+            return new ReadOnlyObjectWrapper<>(Double.valueOf(df.format(flightDoubleCellDataFeatures.getValue().getCalculatedDistanceInNm())));
+        });
         table.getColumns().add(distance);
 
         TableColumn<Flight, String> duration = new TableColumn<>("Duration");
-        duration.setCellValueFactory(new PropertyValueFactory<>("formatedFlightTime"));
+        duration.setCellValueFactory(flightDoubleCellDataFeatures -> {
+            long seconds = flightDoubleCellDataFeatures.getValue().getCalculatedDurationInSec();
+
+            // Calculate hours and minutes
+            long hours = seconds / 3600;
+            long minutes = (seconds % 3600) / 60;
+
+            // Format and return the string as "HH:MM"
+            return new ReadOnlyObjectWrapper<>(String.format("%02d:%02d", hours, minutes));
+
+        });
         table.getColumns().add(duration);
 
         TableColumn<Flight, String> aircraft = new TableColumn<>("Aircraft");
@@ -140,11 +156,11 @@ public class LogbookController {
         table.getColumns().add(aircraft);
 
         TableColumn<Flight, String> from = new TableColumn<>("From");
-        from.setCellValueFactory(new PropertyValueFactory<>("formatedDeparturePositionIcao"));
+        from.setCellValueFactory(flightDoubleCellDataFeatures -> new ReadOnlyObjectWrapper<>(flightDoubleCellDataFeatures.getValue().getDeparturePosition().getIcao()));
         table.getColumns().add(from);
 
         TableColumn<Flight, String> to = new TableColumn<>("To");
-        to.setCellValueFactory(new PropertyValueFactory<>("formatedArrivalPositionIcao"));
+        to.setCellValueFactory(flightDoubleCellDataFeatures -> new ReadOnlyObjectWrapper<>(flightDoubleCellDataFeatures.getValue().getArrivalPosition().getIcao()));
         table.getColumns().add(to);
 
 

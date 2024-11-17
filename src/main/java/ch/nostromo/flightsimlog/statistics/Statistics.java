@@ -21,8 +21,8 @@ public class Statistics {
             AircraftStatistics statistics = aircraftStatisticsMap.get(flight.getSimAircraft());
             statistics.simAircraft = flight.getSimAircraft();
             statistics.flightCount++;
-            statistics.totalDistance += flight.getDistanceNm();
-            statistics.totalSeconds += flight.getAirSeconds();
+            statistics.totalDistance += flight.getCalculatedDistanceInNm();
+            statistics.totalSeconds += flight.getCalculatedDurationInSec();
         }
 
         List<AircraftStatistics> aircraftStatisticsList = new ArrayList<>(aircraftStatisticsMap.values());

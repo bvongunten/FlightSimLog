@@ -76,8 +76,13 @@ public class Logbook {
         return result;
     }
 
-    public List<Aircraft> getSortedAircraft() {
-        List<Aircraft> result = new ArrayList<>(aircraft);
+    public List<Aircraft> getFilteredAircraftList(String filter) {
+        List<Aircraft> result = new ArrayList<>();
+        for (Aircraft aircraft : aircraft) {
+            if (filter == null  || filter.isEmpty() || aircraft.getDescription().toUpperCase().contains(filter.toUpperCase()) || aircraft.getManufacturer().toUpperCase().contains(filter.toUpperCase())) {
+                result.add(aircraft);
+            }
+        }
 
         result.sort(Comparator.comparing(Aircraft::getDescription));
 
@@ -85,8 +90,6 @@ public class Logbook {
     }
 
     public List<Flight> getFilteredFlightList(Category category) {
-
-
         List<Flight> result = new ArrayList<>();
 
         for (Flight flight : flights) {

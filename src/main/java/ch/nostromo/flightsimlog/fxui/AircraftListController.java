@@ -22,7 +22,6 @@ import java.util.Optional;
 
 public class AircraftListController {
 
-
     @FXML
     BorderPane aircraftListPane;
 
@@ -31,19 +30,24 @@ public class AircraftListController {
 
     Logbook logbook;
 
-    String currentFilter;
+    String currentFilter = "";
 
     public void setup(Logbook logbook) {
         this.logbook = logbook;
 
+        txtFilter.textProperty().addListener((obs, old, niu) -> {
+           currentFilter = txtFilter.getText();
+           setTable(logbook.getFilteredAircraftList(currentFilter));
+        });
 
-        setTable(logbook.getSortedAircraft());
+        setTable(logbook.getFilteredAircraftList(currentFilter));
+
     }
 
     private void setTable(List<Aircraft> flights) {
         ObservableList<Aircraft> data = FXCollections.observableArrayList(flights);
 
-        TableView<Aircraft> table = new TableView<Aircraft>();
+        TableView<Aircraft> table = new TableView<>();
         table.setItems(data);
 
         TableColumn<Aircraft, String> manufacturer = new TableColumn<>("Manufacturer");
@@ -74,11 +78,9 @@ public class AircraftListController {
         seatingType.setCellValueFactory(new PropertyValueFactory<>("aircraftSeatingType"));
         table.getColumns().add(seatingType);
 
-
         TableColumn<Aircraft, Integer> speed = new TableColumn<>("Speed");
         speed.setCellValueFactory(new PropertyValueFactory<>("speed"));
         table.getColumns().add(speed);
-
 
         TableColumn<Aircraft, Integer> altitude = new TableColumn<>("Altitude");
         altitude.setCellValueFactory(new PropertyValueFactory<>("altitude"));
@@ -138,13 +140,13 @@ public class AircraftListController {
                 } else if (event.getButton() == MouseButton.SECONDARY) {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                     alert.setTitle("Confirmation Dialog");
-                    alert.setHeaderText("Delete an aircraft");
+                    alert.setHeaderText("Delete aircraft");
                     alert.setContentText("Are you sure?");
 
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get() == ButtonType.OK) {
                         FlightSimLogController.getInstance().deleteAircraft(row.getItem());
-                        setTable(logbook.getSortedAircraft());
+                        setTable(logbook.getFilteredAircraftList(currentFilter));
                     }
 
                 }

@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.*;
 import java.io.File;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 @Data
@@ -124,52 +122,16 @@ public class Flight {
         return id != null ? id.hashCode() : 0;
     }
 
-
-    // **************************************** FXUI Table helpers *****************************************
-
-
-    public double getDistanceNm() {
-        if (departurePosition != null && arrivalPosition != null) {
-            return GeoTools.calculateDistance(departurePosition, arrivalPosition, "N");
-        }
-        return 0.0d;
+    public double getCalculatedDistanceInNm() {
+        return GeoTools.calculateDistance(departurePosition, arrivalPosition, "N");
     }
 
-    public int getAirSeconds() {
+    public int getCalculatedDurationInSec() {
         if (arrivalTime != null && departureTime != null) {
             return (int) (arrivalTime.getTimeInMillis() - departureTime.getTimeInMillis()) / 1000;
         }
 
         return 0;
-    }
-
-
-    public String getFormatedFlightTime() {
-        long seconds = getAirSeconds();
-
-        // Calculate hours and minutes
-        long hours = seconds / 3600;
-        long minutes = (seconds % 3600) / 60;
-
-        // Format and return the string as "HH:MM"
-        return String.format("%02d:%02d", hours, minutes);
-    }
-
-    public String getFormatedComputerDepartureTime() {
-        return new SimpleDateFormat("yyyy.MM.dd HH:mm").format(computerDepartureTime.getTime());
-    }
-
-    public Double getFormatedDistance() {
-        DecimalFormat df = new DecimalFormat("####0.00");
-        return Double.valueOf(df.format(getDistanceNm()));
-    }
-
-    public String getFormatedDeparturePositionIcao() {
-        return departurePosition.getIcao();
-    }
-
-    public String getFormatedArrivalPositionIcao() {
-        return arrivalPosition.getIcao();
     }
 
     // ******************************** FILE HANDLING *******************************

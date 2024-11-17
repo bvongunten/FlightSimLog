@@ -17,7 +17,6 @@
    </top>
    <bottom>
       <Pane prefHeight="140.0" prefWidth="1500.0" BorderPane.alignment="CENTER">
-
            <children>
               <Button fx:id="btnCreateFlight" layoutX="28.0" layoutY="36.0" mnemonicParsing="false" onAction="#onCreateFlight" prefHeight="25.0" prefWidth="100.0" text="Create Flight" />
               <Button fx:id="btnAutotracker" layoutX="146.0" layoutY="36.0" mnemonicParsing="false" onAction="#onAutotracker" prefHeight="25.0" prefWidth="100.0" text="Autotracker" />

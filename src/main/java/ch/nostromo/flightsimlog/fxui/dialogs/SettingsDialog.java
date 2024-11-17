@@ -1,4 +1,4 @@
-package ch.nostromo.flightsimlog.fxui;
+package ch.nostromo.flightsimlog.fxui.dialogs;
 
 import javafx.geometry.Insets;
 import javafx.scene.Node;

@@ -156,7 +156,7 @@ public class AutoTracker implements TrackerListener {
 
             // Aircraft
             if (simulationData.getAircraft() != null && !simulationData.getAircraft().isEmpty()) {
-                SimAircraft simAircraft = FlightSimLogController.getInstance().getOrCreateAircraft(simulationData.getAircraft());
+                SimAircraft simAircraft = FlightSimLogController.getInstance().getOrCreateSimAircraft(simulationData.getAircraft());
                 currentFlight.setSimAircraft(simAircraft);
             }
 

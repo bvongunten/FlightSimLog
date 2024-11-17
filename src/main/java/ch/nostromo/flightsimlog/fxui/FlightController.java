@@ -8,7 +8,7 @@ import ch.nostromo.flightsimlog.airports.Airport;
 import ch.nostromo.flightsimlog.airports.AirportsService;
 import ch.nostromo.flightsimlog.data.base.SimAircraft;
 import ch.nostromo.flightsimlog.data.base.Category;
-import ch.nostromo.flightsimlog.data.base.FlightSim;
+import ch.nostromo.flightsimlog.data.flight.FlightSim;
 import ch.nostromo.flightsimlog.data.coordinates.SimulationMeasurement;
 import ch.nostromo.flightsimlog.data.flight.Flight;
 import ch.nostromo.flightsimlog.data.flight.SimulationData;
@@ -127,7 +127,7 @@ public class FlightController {
         cbAircraft.setEditable(true);
         cbAircraft.getEditor().setId("txtAircraft");
 
-        for (SimAircraft simAircraft : FlightSimLogController.getInstance().getAircraft()) {
+        for (SimAircraft simAircraft : FlightSimLogController.getInstance().getSimAircraft()) {
             cbAircraft.getItems().add(simAircraft);
         }
 
@@ -247,7 +247,7 @@ public class FlightController {
             flight.setComputerDepartureTime(CalendarTools.stringToCal(txtComputerDepartureTime.getText(), false));
             flight.setComputerArrivalTime(CalendarTools.stringToCal(txtComputerArrivalTime.getText(), false));
 
-            flight.setSimAircraft(FlightSimLogController.getInstance().getOrCreateAircraft(cbAircraft.getEditor().getText()));
+            flight.setSimAircraft(FlightSimLogController.getInstance().getOrCreateSimAircraft(cbAircraft.getEditor().getText()));
 
         } catch (Exception e) {
             FlightSimLogController.getInstance().showWarning("Bind failed with error: " + e.getMessage());

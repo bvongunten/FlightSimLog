@@ -1,8 +1,9 @@
 package ch.nostromo.flightsimlog.data;
 
+import ch.nostromo.flightsimlog.data.base.Aircraft;
 import ch.nostromo.flightsimlog.data.base.SimAircraft;
 import ch.nostromo.flightsimlog.data.base.Category;
-import ch.nostromo.flightsimlog.data.base.FlightSim;
+import ch.nostromo.flightsimlog.data.flight.FlightSim;
 import ch.nostromo.flightsimlog.data.flight.Flight;
 import lombok.Data;
 import lombok.Getter;
@@ -26,13 +27,22 @@ public class Logbook {
     public Integer flightIdSequence = 0;
 
     @XmlElement
-    public Integer aircraftIdSequence = 0;
+    public Integer simAircraftSequence = 0;
+
+    @XmlElement
+    public Integer aircraftSequence = 0;
 
     @XmlElement
     public Integer categoryIdSequence = 0;
 
     @XmlElement
     public FlightSim defaultFlightsim = FlightSim.MSFS_2020;
+
+
+    @XmlElementWrapper(name = "aircraft")
+    @XmlElement(name = "aircraft")
+    public List<Aircraft> aircraft = new ArrayList<>();
+
 
     @XmlElementWrapper(name = "categories")
     @XmlElement(name = "category")
@@ -58,10 +68,18 @@ public class Logbook {
         throw new IllegalArgumentException("Unknown ID: " + id);
     }
 
-    public List<SimAircraft> getSortedAircraft() {
+    public List<SimAircraft> getSortedSimAircraft() {
         List<SimAircraft> result = new ArrayList<>(simAircraft);
 
         result.sort(Comparator.comparing(SimAircraft::getDescription));
+
+        return result;
+    }
+
+    public List<Aircraft> getSortedAircraft() {
+        List<Aircraft> result = new ArrayList<>(aircraft);
+
+        result.sort(Comparator.comparing(Aircraft::getDescription));
 
         return result;
     }
@@ -82,20 +100,35 @@ public class Logbook {
         return result;
     }
 
+    public int getFlightCountByAircraft(Aircraft aircraft) {
+        int count = 0;
+        for (Flight flight : getFlights()) {
+            if (aircraft.getSimAircraft().contains(flight.getSimAircraft())) {
+                count ++;
+            }
+
+        }
+        return count;
+    }
 
     public String getNextFlightId() {
         flightIdSequence++;
         return String.valueOf(flightIdSequence);
     }
 
-    public String getNextAircraftId() {
-        aircraftIdSequence++;
-        return "A-" + String.valueOf(aircraftIdSequence);
+    public String getNextSimAircraftId() {
+        simAircraftSequence++;
+        return "S-" + simAircraftSequence;
     }
 
     public String getNextCategoryId() {
         categoryIdSequence++;
-        return "C-" + String.valueOf(categoryIdSequence);
+        return "C-" + categoryIdSequence;
+    }
+
+    public String getNextAircraftId() {
+        aircraftSequence++;
+        return "A-" + aircraftSequence;
     }
 
     public boolean isCategoryInUse(Category selectedItem) {

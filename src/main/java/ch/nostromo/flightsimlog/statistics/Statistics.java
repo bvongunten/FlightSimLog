@@ -1,5 +1,6 @@
 package ch.nostromo.flightsimlog.statistics;
 
+import ch.nostromo.flightsimlog.FlightSimLogController;
 import ch.nostromo.flightsimlog.data.base.SimAircraft;
 import ch.nostromo.flightsimlog.data.flight.Flight;
 
@@ -28,11 +29,12 @@ public class Statistics {
 
         aircraftStatisticsList.sort((o1, o2) -> Integer.compare(o2.getFlightCount(), o1.getFlightCount()));
 
-
+        StringBuilder sb = new StringBuilder();
         for (AircraftStatistics statistics : aircraftStatisticsList) {
-            System.out.println(statistics.getSimAircraft() + ", " + statistics.getFlightCount() + ", " + Math.round(statistics.getTotalDistance()) + ", " + Math.round(statistics.getTotalSeconds()));
+            sb.append(statistics.getSimAircraft() + ", " + statistics.getFlightCount() + ", " + Math.round(statistics.getTotalDistance()) + ", " + Math.round(statistics.getTotalSeconds()) + System.lineSeparator());
         }
 
+        FlightSimLogController.getInstance().showTextDialog(sb.toString());
 
     }
 

@@ -6,20 +6,34 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="672.0" prefWidth="1229.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.nostromo.flightsimlog.fxui.LogbookController">
-   <children>
-      <ChoiceBox fx:id="cbCategories" layoutX="135.0" layoutY="36.0" prefHeight="25.0" prefWidth="216.0" />
-      <Label layoutX="34.0" layoutY="40.0" prefHeight="17.0" prefWidth="91.0" text="Category Filter" />
-      <BorderPane fx:id="paneFlights" layoutX="25.0" layoutY="80.0" prefHeight="471.0" prefWidth="1167.0" />
-      <Button fx:id="btnCreateFlight" layoutX="25.0" layoutY="565.0" mnemonicParsing="false" onAction="#onCreateFlight" prefHeight="25.0" prefWidth="100.0" text="Create Flight" />
-      <Button fx:id="btnAutotracker" layoutX="143.0" layoutY="565.0" mnemonicParsing="false" onAction="#onAutotracker" prefHeight="25.0" prefWidth="100.0" text="Autotracker" />
-      <Button fx:id="btnGeoJsonPath" layoutX="25.0" layoutY="609.0" mnemonicParsing="false" onAction="#onGeoJsonPath" prefHeight="25.0" prefWidth="100.0" text="GeoJson Paths" />
-      <Button fx:id="btnGeoJsonAirport" layoutX="143.0" layoutY="609.0" mnemonicParsing="false" onAction="#onGeoJsonAirport" prefHeight="25.0" prefWidth="100.0" text="GeoJson AP" />
-      <Button layoutX="559.0" layoutY="609.0" mnemonicParsing="false" onAction="#onSettings" prefHeight="25.0" prefWidth="100.0" text="Settings" />
-      <Button layoutX="839.0" layoutY="609.0" mnemonicParsing="false" onAction="#onNewLogbook" prefHeight="25.0" prefWidth="100.0" text="New Logbook" />
-      <Button layoutX="950.0" layoutY="609.0" mnemonicParsing="false" onAction="#onLoad" prefHeight="25.0" prefWidth="100.0" text="Load Logbook" />
-      <Button layoutX="1092.0" layoutY="609.0" mnemonicParsing="false" onAction="#onQuit" prefHeight="25.0" prefWidth="100.0" text="Quit" />
-      <Button fx:id="btnCategories" layoutX="446.0" layoutY="609.0" mnemonicParsing="false" onAction="#onCategories" prefHeight="25.0" prefWidth="100.0" text="Categories" />
-      <Button fx:id="btnStatistics" layoutX="260.0" layoutY="609.0" mnemonicParsing="false" onAction="#onStatistics" prefHeight="25.0" prefWidth="100.0" text="Statistics" />
-   </children>
-</Pane>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.nostromo.flightsimlog.fxui.LogbookController">
+   <top>
+      <Pane prefHeight="50.0" prefWidth="1500.0" BorderPane.alignment="CENTER">
+         <children>
+              <ChoiceBox fx:id="cbCategories" layoutX="125.0" layoutY="8.0" prefHeight="25.0" prefWidth="216.0" />
+              <Label layoutX="24.0" layoutY="12.0" prefHeight="17.0" prefWidth="91.0" text="Category Filter" />
+         </children>
+      </Pane>
+   </top>
+   <bottom>
+      <Pane prefHeight="140.0" prefWidth="1500.0" BorderPane.alignment="CENTER">
+
+           <children>
+              <Button fx:id="btnCreateFlight" layoutX="28.0" layoutY="36.0" mnemonicParsing="false" onAction="#onCreateFlight" prefHeight="25.0" prefWidth="100.0" text="Create Flight" />
+              <Button fx:id="btnAutotracker" layoutX="146.0" layoutY="36.0" mnemonicParsing="false" onAction="#onAutotracker" prefHeight="25.0" prefWidth="100.0" text="Autotracker" />
+              <Button fx:id="btnAircraft" layoutX="449.0" layoutY="36.0" mnemonicParsing="false" onAction="#onAircraft" prefHeight="25.0" prefWidth="100.0" text="Aircraft" />
+              <Button fx:id="btnCategories" layoutX="568.0" layoutY="36.0" mnemonicParsing="false" onAction="#onCategories" prefHeight="25.0" prefWidth="100.0" text="Categories" />
+              <Button fx:id="btnGeoJsonPath" layoutX="28.0" layoutY="80.0" mnemonicParsing="false" onAction="#onGeoJsonPath" prefHeight="25.0" prefWidth="100.0" text="GeoJson Paths" />
+              <Button fx:id="btnGeoJsonAirport" layoutX="146.0" layoutY="80.0" mnemonicParsing="false" onAction="#onGeoJsonAirport" prefHeight="25.0" prefWidth="100.0" text="GeoJson AP" />
+              <Button layoutX="449.0" layoutY="80.0" mnemonicParsing="false" onAction="#onSettings" prefHeight="25.0" prefWidth="100.0" text="Settings" />
+              <Button layoutX="842.0" layoutY="80.0" mnemonicParsing="false" onAction="#onNewLogbook" prefHeight="25.0" prefWidth="100.0" text="New Logbook" />
+              <Button layoutX="953.0" layoutY="80.0" mnemonicParsing="false" onAction="#onLoad" prefHeight="25.0" prefWidth="100.0" text="Load Logbook" />
+              <Button layoutX="1095.0" layoutY="80.0" mnemonicParsing="false" onAction="#onQuit" prefHeight="25.0" prefWidth="100.0" text="Quit" />
+              <Button fx:id="btnStatistics" layoutX="263.0" layoutY="80.0" mnemonicParsing="false" onAction="#onStatistics" prefHeight="25.0" prefWidth="100.0" text="Statistics" />
+           </children>
+      </Pane>
+   </bottom>
+   <center>
+        <BorderPane fx:id="paneFlights" prefHeight="471.0" prefWidth="1167.0" BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>

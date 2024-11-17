@@ -5,10 +5,10 @@ import ch.nostromo.flightsimlog.FlightSimLogController;
 import ch.nostromo.flightsimlog.data.Logbook;
 import ch.nostromo.flightsimlog.data.base.Category;
 import ch.nostromo.flightsimlog.data.flight.Flight;
+import ch.nostromo.flightsimlog.fxui.fxutils.TableViewResizer;
 import ch.nostromo.flightsimlog.statistics.Statistics;
 import ch.nostromo.flightsimlog.tracker.autotracker.AutoTracker;
 import ch.nostromo.flightsimlog.tracker.autotracker.AutoTrackerListener;
-import ch.nostromo.flightsimlog.utils.ClipboardTools;
 import ch.nostromo.flightsimlog.utils.GeoJson;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -110,48 +110,43 @@ public class LogbookController {
     }
 
     private void setTable(List<Flight> flights) {
-        ObservableList<Flight> data =
-                FXCollections.observableArrayList(flights);
-
-        TableColumn computerDepartureCol = new TableColumn("Computer Time");
-        computerDepartureCol.setMinWidth(50);
-        computerDepartureCol.setCellValueFactory(new PropertyValueFactory<Flight, String>("formatedComputerDepartureTime"));
-
-
-        TableColumn descriptionCol = new TableColumn("Description");
-        descriptionCol.setMinWidth(250);
-        descriptionCol.setCellValueFactory(new PropertyValueFactory<Flight, String>("description"));
-
-
-        TableColumn categoryCol = new TableColumn("Category");
-        categoryCol.setMinWidth(50);
-        categoryCol.setCellValueFactory(new PropertyValueFactory<Flight, Category>("category"));
-
-
-        TableColumn distanceCol = new TableColumn("Distance");
-        distanceCol.setMinWidth(50);
-        distanceCol.setCellValueFactory(new PropertyValueFactory<Flight, String>("formatedDistance"));
-
-
-        TableColumn hoursCol = new TableColumn("Duration");
-        hoursCol.setMinWidth(50);
-        hoursCol.setCellValueFactory(new PropertyValueFactory<Flight, String>("formatedFlightTime"));
-
-        TableColumn aircraftCol = new TableColumn("Aircraft");
-        aircraftCol.setMinWidth(50);
-        aircraftCol.setCellValueFactory(new PropertyValueFactory<Flight, String>("simAircraft"));
-
-        TableColumn fromCol = new TableColumn("From");
-        fromCol.setMinWidth(50);
-        fromCol.setCellValueFactory(new PropertyValueFactory<Flight, String>("formatedDeparturePositionIcao"));
-
-        TableColumn toCol = new TableColumn("To");
-        toCol.setMinWidth(50);
-        toCol.setCellValueFactory(new PropertyValueFactory<Flight, String>("formatedArrivalPositionIcao"));
-
-        TableView table = new TableView<Flight>();
+        ObservableList<Flight> data = FXCollections.observableArrayList(flights);
+        TableView<Flight> table = new TableView<>();
         table.setItems(data);
-        table.getColumns().addAll(computerDepartureCol, descriptionCol, fromCol, toCol, distanceCol, hoursCol, aircraftCol, categoryCol);
+
+        TableColumn<Flight, String> pcDepartureTime = new TableColumn<>("Computer Time");
+        pcDepartureTime.setCellValueFactory(new PropertyValueFactory<>("formatedComputerDepartureTime"));
+        table.getColumns().add(pcDepartureTime);
+
+        TableColumn<Flight, String> description = new TableColumn<>("Description");
+        description.setCellValueFactory(new PropertyValueFactory<>("description"));
+        table.getColumns().add(description);
+
+
+        TableColumn<Flight, Category> category = new TableColumn<>("Category");
+        category.setCellValueFactory(new PropertyValueFactory<>("category"));
+        table.getColumns().add(category);
+
+        TableColumn<Flight, Double> distance = new TableColumn<>("Distance");
+        distance.setCellValueFactory(new PropertyValueFactory<>("formatedDistance"));
+        table.getColumns().add(distance);
+
+        TableColumn<Flight, String> duration = new TableColumn<>("Duration");
+        duration.setCellValueFactory(new PropertyValueFactory<>("formatedFlightTime"));
+        table.getColumns().add(duration);
+
+        TableColumn<Flight, String> aircraft = new TableColumn<>("Aircraft");
+        aircraft.setCellValueFactory(new PropertyValueFactory<>("simAircraft"));
+        table.getColumns().add(aircraft);
+
+        TableColumn<Flight, String> from = new TableColumn<>("From");
+        from.setCellValueFactory(new PropertyValueFactory<>("formatedDeparturePositionIcao"));
+        table.getColumns().add(from);
+
+        TableColumn<Flight, String> to = new TableColumn<>("To");
+        to.setCellValueFactory(new PropertyValueFactory<>("formatedArrivalPositionIcao"));
+        table.getColumns().add(to);
+
 
         paneFlights.setCenter(table);
 
@@ -178,7 +173,10 @@ public class LogbookController {
             return row;
         });
 
+        TableViewResizer.autoSizeColumns(table);
+
     }
+
 
     @FXML
     void onCreateFlight(ActionEvent event) {
@@ -195,15 +193,18 @@ public class LogbookController {
     @FXML
     void onGeoJsonPath(ActionEvent event) {
         String geoJson = GeoJson.createGeoJson(logbook.getFilteredFlightList(currentFilter), true);
-        ClipboardTools.pasteToClipboard(geoJson);
-        FlightSimLogController.getInstance().showWarning("GeoJson copied to clipboard");
+        FlightSimLogController.getInstance().showTextDialog(geoJson);
     }
 
     @FXML
     void onGeoJsonAirport(ActionEvent event) {
         String geoJson = GeoJson.createGeoJson(logbook.getFilteredFlightList(currentFilter), false);
-        ClipboardTools.pasteToClipboard(geoJson);
-        FlightSimLogController.getInstance().showWarning("GeoJson copied to clipboard");
+        FlightSimLogController.getInstance().showTextDialog(geoJson);
+    }
+
+    @FXML
+    void onAircraft(ActionEvent event) {
+        FlightSimLogController.getInstance().showAircraftList();
     }
 
     @FXML

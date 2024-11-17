@@ -1,20 +1,24 @@
 package ch.nostromo.flightsimlog;
 
 import ch.nostromo.flightsimlog.data.Logbook;
+import ch.nostromo.flightsimlog.data.base.Aircraft;
 import ch.nostromo.flightsimlog.data.base.SimAircraft;
 import ch.nostromo.flightsimlog.data.base.Category;
 import ch.nostromo.flightsimlog.data.flight.Flight;
-import ch.nostromo.flightsimlog.fxui.CategoriesDialog;
-import ch.nostromo.flightsimlog.fxui.FlightController;
-import ch.nostromo.flightsimlog.fxui.LogbookController;
-import ch.nostromo.flightsimlog.fxui.SettingsDialog;
+import ch.nostromo.flightsimlog.fxui.*;
+import ch.nostromo.flightsimlog.utils.ClipboardTools;
 import ch.nostromo.flightsimlog.utils.LogBookTools;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import lombok.Getter;
@@ -63,6 +67,20 @@ public class FlightSimLogController {
         if (logBookFile != null && logBookFile.exists()) {
             logbook = LogBookTools.loadXml(logBookFile);
         }
+
+        // **** AIRCRAFT GENERATION *****
+
+        logbook.getAircraft().clear();
+        for (SimAircraft simAircraft : logbook.getSimAircraft()) {
+            Aircraft aircraft = new Aircraft();
+            aircraft.setId(logbook.getNextAircraftId());
+            aircraft.setDescription(simAircraft.getDescription());
+            aircraft.getSimAircraft().add(simAircraft);
+            logbook.getAircraft().add(aircraft);
+        }
+
+
+        saveLogbookToFile();
 
     }
 
@@ -120,24 +138,24 @@ public class FlightSimLogController {
         return logbook.getCategories();
     }
 
-    public List<SimAircraft> getAircraft() {
-        return logbook.getSortedAircraft();
+    public List<SimAircraft> getSimAircraft() {
+        return logbook.getSortedSimAircraft();
     }
 
-    public SimAircraft getOrCreateAircraft(String aircraftName) {
-        if (aircraftName == null || aircraftName.isEmpty()) {
+    public SimAircraft getOrCreateSimAircraft(String simAircraftName) {
+        if (simAircraftName == null || simAircraftName.isEmpty()) {
             throw new IllegalArgumentException("Aircraft name cannot be null or empty");
         }
 
         for (SimAircraft simAircraft : logbook.getSimAircraft()) {
-            if (simAircraft.getDescription().equalsIgnoreCase(aircraftName)) {
+            if (simAircraft.getDescription().equalsIgnoreCase(simAircraftName)) {
                 return simAircraft;
             }
         }
 
         SimAircraft result = new SimAircraft();
-        result.setId(logbook.getNextAircraftId());
-        result.setDescription(aircraftName);
+        result.setId(logbook.getNextSimAircraftId());
+        result.setDescription(simAircraftName);
 
         logbook.getSimAircraft().add(result);
 
@@ -190,6 +208,23 @@ public class FlightSimLogController {
             showError(e);
         }
     }
+
+    public void showAircraftList() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(FlightSimLogController.class.getResource("/fxml/AircraftList.fxml"));
+            Parent parent = fxmlLoader.load();
+            AircraftListController controller = fxmlLoader.<AircraftListController>getController();
+
+            controller.setup(logbook);
+
+            primaryStage.setTitle("Aircraft List");
+            primaryStage.setScene(new Scene(parent));
+            primaryStage.show();
+        } catch (Exception e) {
+            showError(e);
+        }
+    }
+
 
     public void showFlight(Flight flight) {
         try {
@@ -255,6 +290,45 @@ public class FlightSimLogController {
         alert.setWidth(1200);
 
         alert.showAndWait();
+    }
+
+
+    public void showTextDialog(String text) {
+        Stage dialogStage = new Stage();
+        dialogStage.initOwner(primaryStage);
+        dialogStage.initModality(Modality.WINDOW_MODAL);
+        dialogStage.setTitle("Text Viewer");
+
+        TextArea textArea = new TextArea();
+        textArea.setText(text);
+        textArea.setEditable(false);
+        textArea.setWrapText(false);
+
+        VBox.setVgrow(textArea, Priority.ALWAYS);
+
+        Button closeButton = new Button("Close");
+        closeButton.setOnAction(e -> dialogStage.close());
+
+        Button copyButton = new Button("Copy to Clipboard");
+        copyButton.setOnAction(e -> {
+            ClipboardTools.pasteToClipboard(textArea.getText());
+        });
+
+        VBox layout = new VBox(10, textArea, copyButton, closeButton);
+        layout.setPadding(new Insets(10));
+
+        Scene scene = new Scene(layout, 800, 400); // Set dialog dimensions to 800x400
+        dialogStage.setScene(scene);
+
+        // Show the dialog
+        dialogStage.show();
+    }
+
+
+    public void showAircraft(Aircraft item) {
+    }
+
+    public void deleteAircraft(Aircraft item) {
     }
 
 

@@ -2,7 +2,6 @@ package ch.nostromo.flightsimlog.data.flight;
 
 import ch.nostromo.flightsimlog.data.base.SimAircraft;
 import ch.nostromo.flightsimlog.data.base.Category;
-import ch.nostromo.flightsimlog.data.base.FlightSim;
 import ch.nostromo.flightsimlog.data.coordinates.WorldPosition;
 import ch.nostromo.flightsimlog.utils.FileTools;
 import ch.nostromo.flightsimlog.utils.GeoTools;
@@ -160,9 +159,9 @@ public class Flight {
         return new SimpleDateFormat("yyyy.MM.dd HH:mm").format(computerDepartureTime.getTime());
     }
 
-    public String getFormatedDistance() {
+    public Double getFormatedDistance() {
         DecimalFormat df = new DecimalFormat("####0.00");
-        return df.format(getDistanceNm());
+        return Double.valueOf(df.format(getDistanceNm()));
     }
 
     public String getFormatedDeparturePositionIcao() {

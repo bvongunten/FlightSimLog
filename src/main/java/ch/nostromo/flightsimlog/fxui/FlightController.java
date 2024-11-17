@@ -112,7 +112,7 @@ public class FlightController {
 
     @FXML
     void onCancel(ActionEvent event) {
-        closeFrame();
+        closeForm();
     }
 
 
@@ -261,9 +261,8 @@ public class FlightController {
             return;
         }
 
-        closeFrame();
+        closeForm();
     }
-
 
     @FXML
     void onDepartureICAOLookup(ActionEvent event) {
@@ -460,7 +459,7 @@ public class FlightController {
 
 
 
-    private void closeFrame() {
+    public void closeForm() {
 
         try {
             if (simConnectTracker != null) {
@@ -487,6 +486,4 @@ public class FlightController {
         FlightSimLogController.getInstance().showLogBook();
 
     }
-
-
 }

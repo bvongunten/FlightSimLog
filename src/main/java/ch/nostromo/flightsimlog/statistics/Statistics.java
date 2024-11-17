@@ -34,7 +34,7 @@ public class Statistics {
             sb.append(statistics.getSimAircraft() + ", " + statistics.getFlightCount() + ", " + Math.round(statistics.getTotalDistance()) + ", " + Math.round(statistics.getTotalSeconds()) + System.lineSeparator());
         }
 
-        FlightSimLogController.getInstance().showTextDialog(sb.toString());
+        FlightSimLogController.getInstance().showTextDialog("Statistics", sb.toString());
 
     }
 

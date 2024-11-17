@@ -12,8 +12,6 @@ import ch.nostromo.flightsimlog.tracker.autotracker.AutoTrackerListener;
 import ch.nostromo.flightsimlog.utils.GeoJson;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
@@ -34,16 +32,20 @@ import java.util.Optional;
 public class LogbookController {
 
     @FXML
+    public Button btnAircraft;
+
+
+    @FXML
     BorderPane paneFlights;
 
     @FXML
-    ChoiceBox cbCategories;
+    ChoiceBox<Category> cbCategories;
 
     @FXML
     Button btnCreateFlight;
 
     @FXML
-    Button btnAutotracker;
+    Button btnAutoTracker;
 
     @FXML
     Button btnGeoJsonPath;
@@ -68,8 +70,8 @@ public class LogbookController {
         if (logbook != null) {
             setCategoryFilter();
             setTable(logbook.getFilteredFlightList(currentFilter));
-
-            btnAutotracker.setDisable(false);
+            btnAircraft.setDisable(false);
+            btnAutoTracker.setDisable(false);
             btnGeoJsonPath.setDisable(false);
             btnGeoJsonAirport.setDisable(false);
             btnCreateFlight.setDisable(false);
@@ -77,7 +79,8 @@ public class LogbookController {
             btnStatistics.setDisable(false);
             cbCategories.setDisable(false);
         } else {
-            btnAutotracker.setDisable(true);
+            btnAircraft.setDisable(true);
+            btnAutoTracker.setDisable(true);
             btnGeoJsonPath.setDisable(true);
             btnGeoJsonAirport.setDisable(true);
             btnCreateFlight.setDisable(true);
@@ -99,14 +102,10 @@ public class LogbookController {
         cbCategories.setItems(items);
         cbCategories.getSelectionModel().select(currentFilter);
 
-        cbCategories.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Category>() {
+        cbCategories.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
+            currentFilter = t1;
+            setTable(logbook.getFilteredFlightList(currentFilter));
 
-            @Override
-            public void changed(ObservableValue<? extends Category> observableValue, Category category, Category t1) {
-                currentFilter = t1;
-                setTable(logbook.getFilteredFlightList(currentFilter));
-
-            }
         });
 
 
@@ -202,20 +201,20 @@ public class LogbookController {
 
     @FXML
     void onQuit(ActionEvent event) {
-        Platform.exit();
+        closeForm();
     }
 
 
     @FXML
     void onGeoJsonPath(ActionEvent event) {
         String geoJson = GeoJson.createGeoJson(logbook.getFilteredFlightList(currentFilter), true);
-        FlightSimLogController.getInstance().showTextDialog(geoJson);
+        FlightSimLogController.getInstance().showTextDialog("GeoJson" , geoJson);
     }
 
     @FXML
     void onGeoJsonAirport(ActionEvent event) {
         String geoJson = GeoJson.createGeoJson(logbook.getFilteredFlightList(currentFilter), false);
-        FlightSimLogController.getInstance().showTextDialog(geoJson);
+        FlightSimLogController.getInstance().showTextDialog("GeoJson" , geoJson);
     }
 
     @FXML
@@ -300,4 +299,7 @@ public class LogbookController {
 
     }
 
+    public void closeForm() {
+        Platform.exit();
+    }
 }

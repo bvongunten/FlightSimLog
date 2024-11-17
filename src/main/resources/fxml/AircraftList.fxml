@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.nostromo.flightsimlog.fxui.AircraftListController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/17.0.13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.nostromo.flightsimlog.fxui.AircraftListController">
    <top>
       <Pane prefHeight="55.0" prefWidth="1015.0" BorderPane.alignment="CENTER">
          <children>
             <Label layoutX="25.0" layoutY="17.0" prefHeight="17.0" prefWidth="63.0" text="Filter" />
-            <TextField fx:id="txtFilter" layoutX="109.0" layoutY="13.0" prefHeight="25.0" prefWidth="415.0" />
+            <TextField fx:id="txtFilter" layoutX="109.0" layoutY="13.0" prefHeight="25.0" prefWidth="209.0" />
+            <ChoiceBox fx:id="cbFilterType" layoutX="333.0" layoutY="13.0" prefHeight="25.0" prefWidth="194.0" />
+            <ChoiceBox fx:id="cbFilterSeating" layoutX="545.0" layoutY="13.0" prefHeight="25.0" prefWidth="194.0" />
          </children>
       </Pane>
    </top>
@@ -19,7 +22,7 @@
       <Pane prefHeight="55.0" prefWidth="1015.0" BorderPane.alignment="CENTER">
          <children>
             <Button layoutX="20.0" layoutY="15.0" mnemonicParsing="false" onAction="#onCreateAircraft" prefHeight="25.0" prefWidth="100.0" text="Create Aircraft" />
-            <Button layoutX="893.0" layoutY="15.0" mnemonicParsing="false" onAction="#onClose" prefHeight="25.0" prefWidth="100.0" text="Close" />
+            <Button layoutX="1379.0" layoutY="15.0" mnemonicParsing="false" onAction="#onClose" prefHeight="25.0" prefWidth="100.0" text="Close" />
             <Button layoutX="134.0" layoutY="15.0" mnemonicParsing="false" onAction="#onUnlinked" prefHeight="25.0" prefWidth="100.0" text="Unlinked" />
          </children>
       </Pane>

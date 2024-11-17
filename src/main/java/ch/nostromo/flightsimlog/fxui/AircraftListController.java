@@ -5,6 +5,8 @@ import ch.nostromo.flightsimlog.data.Logbook;
 import ch.nostromo.flightsimlog.data.base.Aircraft;
 import ch.nostromo.flightsimlog.data.base.AircraftSeatingType;
 import ch.nostromo.flightsimlog.data.base.AircraftType;
+import ch.nostromo.flightsimlog.data.base.SimAircraft;
+import ch.nostromo.flightsimlog.fxui.fxutils.CheckBoxCellFactory;
 import ch.nostromo.flightsimlog.fxui.fxutils.TableViewResizer;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -28,19 +30,42 @@ public class AircraftListController {
     @FXML
     TextField txtFilter;
 
+    @FXML
+    ChoiceBox<AircraftType> cbFilterType;
+
+    @FXML
+    ChoiceBox<AircraftSeatingType> cbFilterSeating;
+
     Logbook logbook;
 
     String currentFilter = "";
+    AircraftType currentFilterAircraftType;
+    AircraftSeatingType currentFilterSeatingType;
 
     public void setup(Logbook logbook) {
         this.logbook = logbook;
 
         txtFilter.textProperty().addListener((obs, old, niu) -> {
            currentFilter = txtFilter.getText();
-           setTable(logbook.getFilteredAircraftList(currentFilter));
+           setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType));
         });
 
-        setTable(logbook.getFilteredAircraftList(currentFilter));
+        cbFilterType.getItems().add(null);
+        cbFilterType.getItems().addAll(AircraftType.values());
+        cbFilterType.valueProperty().addListener((observableValue, aircraftType, t1) -> {
+            currentFilterAircraftType = t1;
+            setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType));
+        });
+
+        cbFilterSeating.getItems().add(null);
+        cbFilterSeating.getItems().addAll(AircraftSeatingType.values());
+        cbFilterSeating.valueProperty().addListener((observableValue, aircraftType, t1) -> {
+            currentFilterSeatingType = t1;
+            setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType));
+        });
+
+
+        setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType));
 
     }
 
@@ -66,13 +91,13 @@ public class AircraftListController {
         propulsion.setCellValueFactory(new PropertyValueFactory<>("aircraftPropulsion"));
         table.getColumns().add(propulsion);
 
-        TableColumn<Aircraft, Integer> engines = new TableColumn<>("Engines");
-        engines.setCellValueFactory(new PropertyValueFactory<>("engines"));
-        table.getColumns().add(engines);
+//        TableColumn<Aircraft, Integer> engines = new TableColumn<>("Engines");
+//        engines.setCellValueFactory(new PropertyValueFactory<>("engines"));
+//        table.getColumns().add(engines);
 
-        TableColumn<Aircraft, Integer> seats = new TableColumn<>("Seats");
-        seats.setCellValueFactory(new PropertyValueFactory<>("seats"));
-        table.getColumns().add(seats);
+//        TableColumn<Aircraft, Integer> seats = new TableColumn<>("Seats");
+//        seats.setCellValueFactory(new PropertyValueFactory<>("seats"));
+//        table.getColumns().add(seats);
 
         TableColumn<Aircraft, AircraftSeatingType> seatingType = new TableColumn<>("Seating");
         seatingType.setCellValueFactory(new PropertyValueFactory<>("aircraftSeatingType"));
@@ -82,13 +107,13 @@ public class AircraftListController {
         speed.setCellValueFactory(new PropertyValueFactory<>("speed"));
         table.getColumns().add(speed);
 
-        TableColumn<Aircraft, Integer> altitude = new TableColumn<>("Altitude");
-        altitude.setCellValueFactory(new PropertyValueFactory<>("altitude"));
-        table.getColumns().add(altitude);
+//        TableColumn<Aircraft, Integer> altitude = new TableColumn<>("Altitude");
+//        altitude.setCellValueFactory(new PropertyValueFactory<>("altitude"));
+//        table.getColumns().add(altitude);
 
-        TableColumn<Aircraft, Integer> endurance = new TableColumn<>("Endurance");
-        endurance.setCellValueFactory(new PropertyValueFactory<>("endurance"));
-        table.getColumns().add(endurance);
+//        TableColumn<Aircraft, Integer> endurance = new TableColumn<>("Endurance");
+//        endurance.setCellValueFactory(new PropertyValueFactory<>("endurance"));
+//        table.getColumns().add(endurance);
 
         TableColumn<Aircraft, Integer> range = new TableColumn<>("Range");
         range.setCellValueFactory(new PropertyValueFactory<>("range"));
@@ -102,25 +127,32 @@ public class AircraftListController {
         steamGauges.setCellValueFactory(new PropertyValueFactory<>("gauges"));
         table.getColumns().add(steamGauges);
 
-        TableColumn<Aircraft, Boolean> gears = new TableColumn<>("Gears");
-        gears.setCellValueFactory(new PropertyValueFactory<>("gears"));
-        table.getColumns().add(gears);
-
-        TableColumn<Aircraft, Boolean> floats = new TableColumn<>("Floats");
-        floats.setCellValueFactory(new PropertyValueFactory<>("floats"));
-        table.getColumns().add(floats);
-
-        TableColumn<Aircraft, Boolean> skis = new TableColumn<>("Skis");
-        skis.setCellValueFactory(new PropertyValueFactory<>("skis"));
-        table.getColumns().add(skis);
+//        TableColumn<Aircraft, Boolean> gears = new TableColumn<>("Gears");
+//        gears.setCellValueFactory(new PropertyValueFactory<>("gears"));
+//        table.getColumns().add(gears);
+//
+//        TableColumn<Aircraft, Boolean> floats = new TableColumn<>("Floats");
+//        floats.setCellValueFactory(new PropertyValueFactory<>("floats"));
+//        table.getColumns().add(floats);
+//
+//        TableColumn<Aircraft, Boolean> skis = new TableColumn<>("Skis");
+//        skis.setCellValueFactory(new PropertyValueFactory<>("skis"));
+//        table.getColumns().add(skis);
 
         TableColumn<Aircraft, Boolean> favorite = new TableColumn<>("Favorite");
         favorite.setCellValueFactory(new PropertyValueFactory<>("favorite"));
+        favorite.setCellFactory(new CheckBoxCellFactory<>());
         table.getColumns().add(favorite);
 
         TableColumn<Aircraft, Boolean> mastered = new TableColumn<>("Mastered");
         mastered.setCellValueFactory(new PropertyValueFactory<>("mastered"));
+        mastered.setCellFactory(new CheckBoxCellFactory<>());
         table.getColumns().add(mastered);
+
+        TableColumn<Aircraft, Boolean> toCheck = new TableColumn<>("To check");
+        toCheck.setCellValueFactory(new PropertyValueFactory<>("toCheck"));
+        toCheck.setCellFactory(new CheckBoxCellFactory<>());
+        table.getColumns().add(toCheck);
 
         TableColumn<Aircraft, Integer> simAircrafts = new TableColumn<>("Sim Aircraft");
         simAircrafts.setCellValueFactory(aircraftIntegerCellDataFeatures -> new ReadOnlyObjectWrapper<>(aircraftIntegerCellDataFeatures.getValue().getSimAircraft().size()));
@@ -146,7 +178,7 @@ public class AircraftListController {
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get() == ButtonType.OK) {
                         FlightSimLogController.getInstance().deleteAircraft(row.getItem());
-                        setTable(logbook.getFilteredAircraftList(currentFilter));
+                        setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType));
                     }
 
                 }
@@ -161,16 +193,28 @@ public class AircraftListController {
 
     @FXML
     void onCreateAircraft(ActionEvent event) {
-        //
+        FlightSimLogController.getInstance().createAircraft();
     }
 
     @FXML
     void onUnlinked(ActionEvent event) {
-        //
+        List<SimAircraft> unlinkedAircraft = logbook.getUnlinkedSimAircraft();
+        StringBuilder sb = new StringBuilder();
+        for (SimAircraft aircraft : unlinkedAircraft) {
+            sb.append(aircraft.getDescription()).append(System.lineSeparator());
+        }
+
+        FlightSimLogController.getInstance().showTextDialog("Unlinked sim aircraft", sb.toString());
+
     }
 
     @FXML
     void onClose(ActionEvent event) {
+        closeForm();
+    }
+
+
+    public void closeForm() {
         Stage stage = (Stage) txtFilter.getScene().getWindow();
         stage.close();
 

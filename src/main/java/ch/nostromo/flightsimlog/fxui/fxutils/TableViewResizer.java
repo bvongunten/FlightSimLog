@@ -20,6 +20,8 @@ public class TableViewResizer {
 
             column.setPrefWidth(Math.max(headerWidth, cellWidth));
         }
+
+
     }
 
     /**

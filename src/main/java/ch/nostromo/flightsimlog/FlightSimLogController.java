@@ -10,6 +10,7 @@ import ch.nostromo.flightsimlog.fxui.dialogs.CategoriesDialog;
 import ch.nostromo.flightsimlog.fxui.dialogs.SettingsDialog;
 import ch.nostromo.flightsimlog.utils.ClipboardTools;
 import ch.nostromo.flightsimlog.utils.LogBookTools;
+import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
@@ -69,20 +70,6 @@ public class FlightSimLogController {
         if (logBookFile != null && logBookFile.exists()) {
             logbook = LogBookTools.loadXml(logBookFile);
         }
-
-        // **** AIRCRAFT GENERATION *****
-
-        logbook.getAircraft().clear();
-        for (SimAircraft simAircraft : logbook.getSimAircraft()) {
-            Aircraft aircraft = new Aircraft();
-            aircraft.setId(logbook.getNextAircraftId());
-            aircraft.setDescription(simAircraft.getDescription());
-            aircraft.getSimAircraft().add(simAircraft);
-            logbook.getAircraft().add(aircraft);
-        }
-
-
-        saveLogbookToFile();
 
     }
 
@@ -176,11 +163,27 @@ public class FlightSimLogController {
         showFlight(flight);
     }
 
+    public void createAircraft() {
+
+        Aircraft aircraft = new Aircraft();
+        aircraft.setId(logbook.getNextAircraftId());
+        logbook.getAircraft().add(aircraft);
+
+        showAircraft(aircraft);
+    }
+
     public void deleteFlight(Flight flight) {
         logbook.getFlights().remove(flight);
         flight.deleteSimulationData();
         saveLogbookToFile();
     }
+
+
+    public void deleteAircraft(Aircraft aircraft) {
+        logbook.getAircraft().remove(aircraft);
+    }
+
+
 
     public void saveFlight(Flight flightToSave) {
         if (logbook.getFlights().contains(flightToSave)) {
@@ -206,6 +209,9 @@ public class FlightSimLogController {
             primaryStage.setTitle("FlightSimLog " + logbook.getLogbookFile().getAbsolutePath());
             primaryStage.setScene(new Scene(parent));
             primaryStage.show();
+
+            primaryStage.setOnCloseRequest(Event::consume);
+
         } catch (Exception e) {
             showError(e);
         }
@@ -222,6 +228,9 @@ public class FlightSimLogController {
             primaryStage.setTitle("Aircraft List");
             primaryStage.setScene(new Scene(parent));
             primaryStage.show();
+
+            primaryStage.setOnCloseRequest(Event::consume);
+
         } catch (Exception e) {
             showError(e);
         }
@@ -240,11 +249,34 @@ public class FlightSimLogController {
             primaryStage.setTitle("Flight");
             primaryStage.setScene(new Scene(parent));
             primaryStage.show();
+
+            primaryStage.setOnCloseRequest(Event::consume);
+
+
         } catch (Exception e) {
             showError(e);
         }
     }
 
+
+    public void showAircraft(Aircraft aircraft) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(FlightSimLogController.class.getResource("/fxml/Aircraft.fxml"));
+            Parent parent = fxmlLoader.load();
+            AircraftController controller = fxmlLoader.<AircraftController>getController();
+
+            // Edit copy
+            controller.setup(aircraft);
+
+            primaryStage.setTitle("Aircraft");
+            primaryStage.setScene(new Scene(parent));
+            primaryStage.show();
+
+            primaryStage.setOnCloseRequest(Event::consume);
+        } catch (Exception e) {
+            showError(e);
+        }
+    }
 
     public void showSettings() {
 
@@ -268,38 +300,23 @@ public class FlightSimLogController {
     }
 
     public void showError(Throwable ex) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error Dialog");
-        alert.setHeaderText("An Error Occurred");
-        alert.setContentText(ex.getMessage());
+
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         ex.printStackTrace(pw);
         String exceptionText = sw.toString();
 
-        TextArea textArea = new TextArea(exceptionText);
-        textArea.setEditable(false);
-        textArea.setWrapText(true);
+        showTextDialog("Error", exceptionText);
 
-        textArea.setMaxWidth(Double.MAX_VALUE);
-        textArea.setMaxHeight(Double.MAX_VALUE);
-
-        alert.getDialogPane().setExpandableContent(textArea);
-        alert.getDialogPane().setExpanded(true);
-
-        alert.setHeight(800);
-        alert.setWidth(1200);
-
-        alert.showAndWait();
     }
 
 
-    public void showTextDialog(String text) {
+    public void showTextDialog(String title, String text) {
         Stage dialogStage = new Stage();
         dialogStage.initOwner(primaryStage);
         dialogStage.initModality(Modality.WINDOW_MODAL);
-        dialogStage.setTitle("Text Viewer");
+        dialogStage.setTitle(title);
 
         TextArea textArea = new TextArea();
         textArea.setText(text);
@@ -326,12 +343,6 @@ public class FlightSimLogController {
         dialogStage.show();
     }
 
-
-    public void showAircraft(Aircraft item) {
-    }
-
-    public void deleteAircraft(Aircraft item) {
-    }
 
 
 }

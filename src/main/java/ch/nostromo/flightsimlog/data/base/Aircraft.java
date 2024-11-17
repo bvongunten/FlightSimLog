@@ -1,6 +1,5 @@
 package ch.nostromo.flightsimlog.data.base;
 
-import ch.nostromo.flightsimlog.FlightSimLogController;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -72,6 +71,9 @@ public class Aircraft {
     Boolean mastered = Boolean.FALSE;
 
     @XmlElement
+    Boolean toCheck = Boolean.TRUE;
+
+    @XmlElement
     String remarks = "";
 
     @XmlElementWrapper(name = "simAircraft")
@@ -83,8 +85,6 @@ public class Aircraft {
     public String toString() {
         return description;
     }
-
-
 
 
 }

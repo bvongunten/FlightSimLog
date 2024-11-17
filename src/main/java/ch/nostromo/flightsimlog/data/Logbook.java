@@ -1,8 +1,6 @@
 package ch.nostromo.flightsimlog.data;
 
-import ch.nostromo.flightsimlog.data.base.Aircraft;
-import ch.nostromo.flightsimlog.data.base.SimAircraft;
-import ch.nostromo.flightsimlog.data.base.Category;
+import ch.nostromo.flightsimlog.data.base.*;
 import ch.nostromo.flightsimlog.data.flight.FlightSim;
 import ch.nostromo.flightsimlog.data.flight.Flight;
 import lombok.Data;
@@ -76,13 +74,20 @@ public class Logbook {
         return result;
     }
 
-    public List<Aircraft> getFilteredAircraftList(String filter) {
+    public List<Aircraft> getFilteredAircraftList(String filter, AircraftType currentFilterAircraftType, AircraftSeatingType currentFilterSeatingType) {
         List<Aircraft> result = new ArrayList<>();
         for (Aircraft aircraft : aircraft) {
-            if (filter == null  || filter.isEmpty() || aircraft.getDescription().toUpperCase().contains(filter.toUpperCase()) || aircraft.getManufacturer().toUpperCase().contains(filter.toUpperCase())) {
-                result.add(aircraft);
+            if (filter == null || filter.isEmpty() || aircraft.getDescription().toUpperCase().contains(filter.toUpperCase()) || aircraft.getManufacturer().toUpperCase().contains(filter.toUpperCase())) {
+                if (currentFilterAircraftType == null ||aircraft.getAircraftType().equals(currentFilterAircraftType)) {
+                    if (currentFilterSeatingType == null || aircraft.getAircraftSeatingType().equals(currentFilterSeatingType)) {
+                        result.add(aircraft);
+                    }
+                }
+
             }
         }
+
+
 
         result.sort(Comparator.comparing(Aircraft::getDescription));
 
@@ -107,11 +112,32 @@ public class Logbook {
         int count = 0;
         for (Flight flight : getFlights()) {
             if (aircraft.getSimAircraft().contains(flight.getSimAircraft())) {
-                count ++;
+                count++;
             }
 
         }
         return count;
+    }
+
+    public boolean isSimAircraftUnlinked(SimAircraft simAircraft) {
+        for (Aircraft aircraft : aircraft) {
+            if (aircraft.getSimAircraft().contains(simAircraft)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public List<SimAircraft> getUnlinkedSimAircraft() {
+        List<SimAircraft> result = new ArrayList<>();
+        for (SimAircraft simAircraft : simAircraft) {
+            if (isSimAircraftUnlinked(simAircraft)) {
+                result.add(simAircraft);
+            }
+        }
+
+        return result;
+
     }
 
     public String getNextFlightId() {

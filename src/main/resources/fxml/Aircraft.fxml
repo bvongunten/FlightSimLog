@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="841.0" prefWidth="1157.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.nostromo.flightsimlog.fxui.AircraftController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="841.0" prefWidth="1157.0" xmlns="http://javafx.com/javafx/17.0.13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.nostromo.flightsimlog.fxui.AircraftController">
    <children>
       <Label layoutX="33.0" layoutY="29.0" prefHeight="17.0" prefWidth="118.0" text="Manufacturer" />
       <Label layoutX="415.0" layoutY="29.0" prefHeight="17.0" prefWidth="118.0" text="Aircraft" />

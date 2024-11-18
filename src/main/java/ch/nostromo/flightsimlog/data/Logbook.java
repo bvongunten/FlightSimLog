@@ -77,7 +77,7 @@ public class Logbook {
     public List<Aircraft> getFilteredAircraftList(String filter, AircraftType currentFilterAircraftType, AircraftSeatingType currentFilterSeatingType) {
         List<Aircraft> result = new ArrayList<>();
         for (Aircraft aircraft : aircraft) {
-            if (filter == null || filter.isEmpty() || aircraft.getDescription().toUpperCase().contains(filter.toUpperCase()) || aircraft.getManufacturer().toUpperCase().contains(filter.toUpperCase())) {
+            if (filter == null || filter.isEmpty() || aircraft.getDescription().toUpperCase().contains(filter.toUpperCase()) || aircraft.getManufacturer().toUpperCase().contains(filter.toUpperCase()) || aircraft.getTags().toUpperCase().contains(filter.toUpperCase()) ) {
                 if (currentFilterAircraftType == null ||aircraft.getAircraftType().equals(currentFilterAircraftType)) {
                     if (currentFilterSeatingType == null || aircraft.getAircraftSeatingType().equals(currentFilterSeatingType)) {
                         result.add(aircraft);

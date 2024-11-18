@@ -30,11 +30,20 @@ public class SimConnectTracker {
         this.port = port;
 
         this.listener = listener;
+
     }
 
 
     public void stopTracker() {
-        simConnect.close();
+        if (simConnect != null) {
+            try {
+                simConnect.close();
+            } catch (Exception ignored) {
+                // Nothing
+            }
+        }
+
+        listener.onDisconnected();
     }
 
     public void startTracker() {
@@ -55,7 +64,6 @@ public class SimConnectTracker {
 
             simConnect.getRequestReceiver().addExceptionHandler(this::handleException);
             simConnect.getRequestReceiver().addEventHandler(this::handleEvent);
-            simConnect.getRequestReceiver().addOpenHandler(this::handleOpen);
             simConnect.getRequestReceiver().addSimobjectDataHandler(this::handleSimObject);
             simConnect.getRequestReceiver().addEventFilenameHandler(this::handleEventFilename);
 
@@ -75,10 +83,13 @@ public class SimConnectTracker {
 
             simConnect.requestDataOnSimObject(1, 1, 0, SimconnectPeriod.SECOND, 0, 0, 0, 0);
 
+            listener.onConnected();
+
 
         } catch (IOException e) {
-            throw new FlightSimLogException(e);
+            listener.onException(e);
         }
+
 
     }
 
@@ -150,11 +161,8 @@ public class SimConnectTracker {
 
 
     public void handleException(RecvExceptionResponse e) {
-        simConnect.close();
-    }
-
-    public void handleOpen(RecvOpenResponse e) {
-        // Do Nothing
+        listener.onException(new FlightSimLogException("Recv exception response: " + e.getExceptionType()));
+        stopTracker();
     }
 
 

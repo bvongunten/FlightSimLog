@@ -6,6 +6,6 @@ public interface AutoTrackerListener extends TrackerListener {
 
    void onFlightStarted();
 
-   void onFlightEnded();
+   void onFlightEnded(String flightDescription);
 
 }

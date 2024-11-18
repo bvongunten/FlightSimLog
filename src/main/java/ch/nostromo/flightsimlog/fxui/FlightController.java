@@ -375,6 +375,21 @@ public class FlightController {
                 public void onEventSim(int sim) {
 
                 }
+
+                @Override
+                public void onConnected() {
+
+                }
+
+                @Override
+                public void onDisconnected() {
+
+                }
+
+                @Override
+                public void onException(Throwable e) {
+
+                }
             });
 
             simConnectTracker.startTracker();

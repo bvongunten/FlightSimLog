@@ -42,10 +42,8 @@ public class AutoTracker implements TrackerListener {
         simConnectTracker = new SimConnectTracker(FlightSimLogConfig.getSimConnectHost(), FlightSimLogConfig.getSimConnectPort(), this);
     }
 
-    public void startTracker() throws URISyntaxException {
+    public void startTracker()  {
         simConnectTracker.startTracker();
-
-
     }
 
     public void stopTracker() {
@@ -75,7 +73,7 @@ public class AutoTracker implements TrackerListener {
 
     @Override
     public void onData(TrackerData data) {
-
+        this.listener.onData(data);
         if (inFlight && currentFlight != null) {
             currentFlight.getSimulationData().addTrackerData(data);
         }
@@ -85,19 +83,37 @@ public class AutoTracker implements TrackerListener {
     @Override
     public void onEventFileLoaded(String file) {
         lastFile = file;
+        this.listener.onEventFileLoaded(file);
         descisionMaker();
     }
 
     @Override
     public void onEventPause(int pause) {
         this.lastPause = pause;
+        this.listener.onEventPause(pause);
         descisionMaker();
     }
 
     @Override
     public void onEventSim(int sim) {
         this.lastSim = sim;
+        this.listener.onEventSim(sim);
         descisionMaker();
+    }
+
+    @Override
+    public void onConnected() {
+        this.listener.onConnected();
+    }
+
+    @Override
+    public void onDisconnected() {
+        this.listener.onDisconnected();
+    }
+
+    @Override
+    public void onException(Throwable e) {
+        this.listener.onException(e);
     }
 
 
@@ -200,10 +216,10 @@ public class AutoTracker implements TrackerListener {
                 throw new FlightSimLogException(e);
             }
 
+            listener.onFlightEnded(currentFlight.getDescription());
 
             currentFlight = null;
 
-            listener.onFlightEnded();
 
         }
     }

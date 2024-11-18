@@ -17,9 +17,10 @@ public class FlightSimLog extends Application {
 
         FlightSimLogController.getInstance().showLogBook();
 
-        Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> {
+        Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
             FlightSimLogController.getInstance().showError(throwable);
         });
+
 
     }
 

@@ -9,4 +9,10 @@ public interface TrackerListener {
    void onEventPause(int pause);
 
    void onEventSim(int sim);
+
+   void onConnected();
+
+   void onDisconnected();
+
+   void onException(Throwable e);
 }

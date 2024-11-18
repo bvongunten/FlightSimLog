@@ -5,19 +5,15 @@ import ch.nostromo.flightsimlog.FlightSimLogController;
 import ch.nostromo.flightsimlog.data.Logbook;
 import ch.nostromo.flightsimlog.data.base.Category;
 import ch.nostromo.flightsimlog.data.flight.Flight;
+import ch.nostromo.flightsimlog.fxui.dialogs.AutotrackerDialog;
 import ch.nostromo.flightsimlog.fxui.dialogs.TextMessageDialog;
 import ch.nostromo.flightsimlog.fxui.fxutils.TableViewResizer;
 import ch.nostromo.flightsimlog.statistics.Statistics;
-import ch.nostromo.flightsimlog.tracker.TrackerData;
-import ch.nostromo.flightsimlog.tracker.autotracker.AutoTracker;
-import ch.nostromo.flightsimlog.tracker.autotracker.AutoTrackerListener;
 import ch.nostromo.flightsimlog.utils.GeoJson;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -257,65 +253,8 @@ public class LogbookController {
 
     @FXML
     void onAutotracker(ActionEvent event) {
-        AutoTracker autoTracker = new AutoTracker(new AutoTrackerListener() {
-            @Override
-            public void onData(TrackerData data) {
-            }
-
-            @Override
-            public void onEventFileLoaded(String file) {
-
-            }
-
-            @Override
-            public void onEventPause(int pause) {
-
-            }
-
-            @Override
-            public void onEventSim(int sim) {
-
-            }
-
-            @Override
-            public void onFlightStarted() {
-                // nothing
-            }
-
-            @Override
-            public void onFlightEnded() {
-                Platform.runLater(() -> {
-                    setLogbook(logbook, currentFilter);
-                });
-
-            }
-        });
-
-        Service<Void> service = new Service<>() {
-            @Override
-            protected Task<Void> createTask() {
-                return new Task<>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        autoTracker.startTracker();
-                        return null;
-                    }
-                };
-            }
-        };
-        service.setOnFailed(evt -> {
-            FlightSimLogController.getInstance().showError(service.getException());
-            service.getException().printStackTrace(System.err);
-        });
-
-        service.start();
-        FlightSimLogController.getInstance().showWarning("Running auto tracker ...");
-
-        try {
-            autoTracker.stopTracker();
-        } catch (Exception ignored) {
-            // tried our best ;)
-        }
+        AutotrackerDialog atd = new AutotrackerDialog(null);
+        atd.showAndWait();
 
         this.setLogbook(this.logbook, this.currentFilter);
 

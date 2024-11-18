@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import javax.xml.bind.annotation.*;
 import java.io.File;
 import java.util.Calendar;
+import java.util.Objects;
 
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -114,7 +115,7 @@ public class Flight {
 
         Flight flight = (Flight) o;
 
-        return id != null ? id.equals(flight.id) : flight.id == null;
+        return Objects.equals(id, flight.id);
     }
 
     @Override

@@ -38,7 +38,6 @@ public class SettingsDialog extends Dialog<Pair<String, String>> {
         Node okButton = this.getDialogPane().lookupButton(okButtonType);
         okButton.setDisable(true);
 
-        // Enable OK button only if both fields are filled
         hostField.textProperty().addListener((observable, oldValue, newValue) -> {
             okButton.setDisable(newValue.trim().isEmpty() || portField.getText().trim().isEmpty());
         });

@@ -6,6 +6,7 @@ import ch.nostromo.flightsimlog.data.base.Aircraft;
 import ch.nostromo.flightsimlog.data.base.AircraftSeatingType;
 import ch.nostromo.flightsimlog.data.base.AircraftType;
 import ch.nostromo.flightsimlog.data.base.SimAircraft;
+import ch.nostromo.flightsimlog.fxui.dialogs.TextMessageDialog;
 import ch.nostromo.flightsimlog.fxui.fxutils.CheckBoxCellFactory;
 import ch.nostromo.flightsimlog.fxui.fxutils.TableViewResizer;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -204,7 +205,9 @@ public class AircraftListController {
             sb.append(aircraft.getDescription()).append(System.lineSeparator());
         }
 
-        FlightSimLogController.getInstance().showTextDialog("Unlinked sim aircraft", sb.toString());
+        new TextMessageDialog((Stage) txtFilter.getScene().getWindow(), "Unlinkled sim aircraft", sb.toString()).showAndWait();
+
+
 
     }
 
@@ -219,7 +222,6 @@ public class AircraftListController {
         stage.close();
 
         FlightSimLogController.getInstance().showLogBook();
-
     }
 
 

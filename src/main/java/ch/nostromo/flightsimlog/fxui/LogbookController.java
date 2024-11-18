@@ -5,8 +5,10 @@ import ch.nostromo.flightsimlog.FlightSimLogController;
 import ch.nostromo.flightsimlog.data.Logbook;
 import ch.nostromo.flightsimlog.data.base.Category;
 import ch.nostromo.flightsimlog.data.flight.Flight;
+import ch.nostromo.flightsimlog.fxui.dialogs.TextMessageDialog;
 import ch.nostromo.flightsimlog.fxui.fxutils.TableViewResizer;
 import ch.nostromo.flightsimlog.statistics.Statistics;
+import ch.nostromo.flightsimlog.tracker.TrackerData;
 import ch.nostromo.flightsimlog.tracker.autotracker.AutoTracker;
 import ch.nostromo.flightsimlog.tracker.autotracker.AutoTrackerListener;
 import ch.nostromo.flightsimlog.utils.GeoJson;
@@ -22,6 +24,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -208,13 +211,13 @@ public class LogbookController {
     @FXML
     void onGeoJsonPath(ActionEvent event) {
         String geoJson = GeoJson.createGeoJson(logbook.getFilteredFlightList(currentFilter), true);
-        FlightSimLogController.getInstance().showTextDialog("GeoJson" , geoJson);
+        new TextMessageDialog((Stage) btnGeoJsonPath.getScene().getWindow(), "GeoJson", geoJson).showAndWait();
     }
 
     @FXML
     void onGeoJsonAirport(ActionEvent event) {
         String geoJson = GeoJson.createGeoJson(logbook.getFilteredFlightList(currentFilter), false);
-        FlightSimLogController.getInstance().showTextDialog("GeoJson" , geoJson);
+        new TextMessageDialog((Stage) btnGeoJsonAirport.getScene().getWindow(), "GeoJson", geoJson).showAndWait();
     }
 
     @FXML
@@ -255,6 +258,25 @@ public class LogbookController {
     @FXML
     void onAutotracker(ActionEvent event) {
         AutoTracker autoTracker = new AutoTracker(new AutoTrackerListener() {
+            @Override
+            public void onData(TrackerData data) {
+            }
+
+            @Override
+            public void onEventFileLoaded(String file) {
+
+            }
+
+            @Override
+            public void onEventPause(int pause) {
+
+            }
+
+            @Override
+            public void onEventSim(int sim) {
+
+            }
+
             @Override
             public void onFlightStarted() {
                 // nothing

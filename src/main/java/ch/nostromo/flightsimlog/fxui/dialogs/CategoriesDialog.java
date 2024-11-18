@@ -14,8 +14,8 @@ import java.util.Optional;
 
 public class CategoriesDialog extends Dialog<Void> {
 
-    private List<Category> items;
-    private ListView<Category> listView;
+    private final List<Category> items;
+    private final ListView<Category> listView;
 
     public CategoriesDialog(List<Category> items) {
         this.items = new ArrayList<>(items); // Make a copy of the list to work with

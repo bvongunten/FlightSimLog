@@ -3,6 +3,7 @@ package ch.nostromo.flightsimlog.statistics;
 import ch.nostromo.flightsimlog.FlightSimLogController;
 import ch.nostromo.flightsimlog.data.base.SimAircraft;
 import ch.nostromo.flightsimlog.data.flight.Flight;
+import ch.nostromo.flightsimlog.fxui.dialogs.TextMessageDialog;
 
 import java.util.*;
 
@@ -34,7 +35,7 @@ public class Statistics {
             sb.append(statistics.getSimAircraft() + ", " + statistics.getFlightCount() + ", " + Math.round(statistics.getTotalDistance()) + ", " + Math.round(statistics.getTotalSeconds()) + System.lineSeparator());
         }
 
-        FlightSimLogController.getInstance().showTextDialog("Statistics", sb.toString());
+        new TextMessageDialog(null, "Statistics", sb.toString()).showAndWait();
 
     }
 

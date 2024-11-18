@@ -74,6 +74,9 @@ public class Aircraft {
     Boolean toCheck = Boolean.TRUE;
 
     @XmlElement
+    String tags = "";
+
+    @XmlElement
     String remarks = "";
 
     @XmlElementWrapper(name = "simAircraft")

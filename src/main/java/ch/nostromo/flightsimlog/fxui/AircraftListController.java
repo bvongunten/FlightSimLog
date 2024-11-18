@@ -163,6 +163,11 @@ public class AircraftListController {
         flightCount.setCellValueFactory(aircraftIntegerCellDataFeatures -> new ReadOnlyObjectWrapper<>(FlightSimLogController.getInstance().getLogbook().getFlightCountByAircraft(aircraftIntegerCellDataFeatures.getValue())));
         table.getColumns().add(flightCount);
 
+        TableColumn<Aircraft, String> remarks = new TableColumn<>("Tags");
+        remarks.setCellValueFactory(new PropertyValueFactory<>("tags"));
+        table.getColumns().add(remarks);
+
+
         aircraftListPane.setCenter(table);
 
         table.setRowFactory(tv -> {

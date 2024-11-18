@@ -85,6 +85,9 @@ public class AircraftController {
     @FXML
     private TextField txtSpeed;
 
+    @FXML
+    private TextField txtTags;
+
 
     Aircraft aircraft;
 
@@ -126,11 +129,14 @@ public class AircraftController {
         txtEndurance.setText(String.valueOf(aircraft.getEndurance()));
         txtRange.setText(String.valueOf(aircraft.getRange()));
 
+        txtTags.setText(String.valueOf(aircraft.getTags()));
         txtRemarks.setText(String.valueOf(aircraft.getRemarks()));
 
         cbFavorite.setSelected(aircraft.getFavorite());
         cbMastered.setSelected(aircraft.getMastered());
         cbToCheck.setSelected(aircraft.getToCheck());
+
+
 
     }
 
@@ -157,6 +163,7 @@ public class AircraftController {
         aircraft.setEndurance(Integer.parseInt(txtEndurance.getText()));
         aircraft.setRange(Integer.parseInt(txtRange.getText()));
 
+        aircraft.setTags(txtTags.getText());
         aircraft.setRemarks(txtRemarks.getText());
         aircraft.setFavorite(cbFavorite.isSelected());
         aircraft.setMastered(cbMastered.isSelected());

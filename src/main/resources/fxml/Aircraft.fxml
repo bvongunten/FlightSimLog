@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="841.0" prefWidth="1157.0" xmlns="http://javafx.com/javafx/17.0.13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.nostromo.flightsimlog.fxui.AircraftController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="841.0" prefWidth="1157.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.nostromo.flightsimlog.fxui.AircraftController">
    <children>
       <Label layoutX="33.0" layoutY="29.0" prefHeight="17.0" prefWidth="118.0" text="Manufacturer" />
       <Label layoutX="415.0" layoutY="29.0" prefHeight="17.0" prefWidth="118.0" text="Aircraft" />
@@ -25,7 +25,7 @@
       <Label layoutX="348.0" layoutY="243.0" prefHeight="17.0" prefWidth="118.0" text="Range" />
       <Label layoutX="500.0" layoutY="243.0" prefHeight="17.0" prefWidth="118.0" text="Endurance" />
       <Label layoutX="582.0" layoutY="136.0" prefHeight="17.0" prefWidth="118.0" text="Gauges" />
-      <Label layoutX="33.0" layoutY="317.0" prefHeight="17.0" prefWidth="118.0" text="Remarks" />
+      <Label layoutX="33.0" layoutY="317.0" prefHeight="17.0" prefWidth="118.0" text="Tags &amp; Remarks" />
       <Label layoutX="986.0" layoutY="66.0" prefHeight="17.0" prefWidth="37.0" text="Flights" />
 
       <TextField fx:id="txtManufacturer" layoutX="159.0" layoutY="25.0" prefHeight="25.0" prefWidth="231.0" />
@@ -53,12 +53,15 @@
       <TextField fx:id="txtRange" layoutX="415.0" layoutY="239.0" prefHeight="25.0" prefWidth="64.0" />
       <TextField fx:id="txtEndurance" layoutX="586.0" layoutY="239.0" prefHeight="25.0" prefWidth="64.0" />
 
+
+      <TextField fx:id="txtTags" layoutX="155.0" layoutY="313.0" prefHeight="25.0" prefWidth="970.0" />
       <TextArea fx:id="txtRemarks" layoutX="31.0" layoutY="345.0" prefHeight="200.0" prefWidth="1096.0" />
 
 
       <Button layoutX="1036.0" layoutY="786.0" mnemonicParsing="false" onAction="#onClose" prefHeight="25.0" prefWidth="91.0" text="Close" />
       <CheckBox fx:id="cbFavorite" layoutX="33.0" layoutY="790.0" mnemonicParsing="false" text="Favorite" />
       <CheckBox fx:id="cbMastered" layoutX="131.0" layoutY="790.0" mnemonicParsing="false" text="Mastered" />
+      <CheckBox fx:id="cbToCheck" layoutX="228.0" layoutY="790.0" mnemonicParsing="false" text="To check" />
 
       <Line endX="995.0" layoutX="134.0" layoutY="112.0" startX="-100.0" />
       <Line endX="995.0" layoutX="134.0" layoutY="213.0" startX="-100.0" />
@@ -67,7 +70,6 @@
       <Line endX="995.0" layoutX="134.0" layoutY="291.0" startX="-100.0" />
       <BorderPane fx:id="paneSimAircraft" layoutX="34.0" layoutY="586.0" prefHeight="140.0" prefWidth="530.0" />
       <BorderPane fx:id="paneUnlinkedAircraft" layoutX="596.0" layoutY="586.0" prefHeight="140.0" prefWidth="530.0" />
-      <CheckBox fx:id="cbToCheck" layoutX="228.0" layoutY="790.0" mnemonicParsing="false" text="To check" />
 
 
    </children>

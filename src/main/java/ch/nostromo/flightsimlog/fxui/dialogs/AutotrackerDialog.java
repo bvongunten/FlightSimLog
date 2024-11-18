@@ -201,7 +201,7 @@ public class AutotrackerDialog extends Stage implements AutoTrackerListener {
 
     @Override
     public void onEventSim(int sim) {
-        addChar("Sim: " + sim);
+        addChar("S" + sim);
     }
 
     @Override

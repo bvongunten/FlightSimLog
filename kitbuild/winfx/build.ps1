@@ -16,6 +16,8 @@ Set-Variable -NAME ARTIFACT -Value "ch\nostromo\flightsimlog\0.0.1-SNAPSHOT\flig
 
 Set-Variable -Name UUID -Value "17d0c55b-35a7-4f1e-8a61-5e73a5e48b86"
 
+$VMImageBinPath = "$WORKINGDIR\app-vmimage\bin"
+
 Set-Variable -Name EXTERNAL_MODULES -Value @(
  "$REPO\$ARTIFACT"
  "$REPO\org\openjfx\javafx-base\17.0.13\javafx-base-17.0.13-win.jar"
@@ -37,7 +39,11 @@ Set-Variable -Name EXTERNAL_MODULES -Value @(
  "$REPO\org\jvnet\staxex\stax-ex\1.8.1\stax-ex-1.8.1.jar"
  "$REPO\com\sun\istack\istack-commons-runtime\3.0.8\istack-commons-runtime-3.0.8.jar"
  "$REPO\com\sun\xml\fastinfoset\FastInfoset\1.2.16\FastInfoset-1.2.16.jar"
+ "$REPO\com\github\kwhat\jnativehook\2.2.2\jnativehook-2.2.2.jar"
 )
+
+$JNativeHookDLL = "$REPO\com\github\kwhat\jnativehook\2.2.2\JNativeHook.x86_64.dll"
+
 
 Set-Variable -Name MODPATH -Value target
 ForEach ($i in $EXTERNAL_MODULES) {
@@ -61,10 +67,14 @@ cd $WORKINGDIR
 Write-Output "Jlink ..."
 & jlink.exe --module-path $MODPATH --add-modules $MAIN_MODULE --add-modules jdk.crypto.ec --launcher $PUBLIC_NAME=$MAIN_MODULE/$MAIN_CLASS --output app-vmimage
 
+
+Write-Output "Copy jnativehook dll ..."
+Copy-Item -Path $JNativeHookDLL -Destination app-vmimage\bin\JNativeHook.dll -Force
+
 Write-Output "App image ..."
 & jpackage.exe --type app-image --name $PUBLIC_NAME --module $MAIN_MODULE/$MAIN_CLASS --runtime-image app-vmimage
 
-Write-Output "Installer ..."
-& jpackage.exe --type msi --name $PUBLIC_NAME --app-version $PUBLIC_VERSION --win-shortcut --win-menu --win-upgrade-uuid $UUID --module-path $MODPATH --module $MAIN_MODULE/$MAIN_CLASS
+## Write-Output "Installer ..."
+## & jpackage.exe --type msi --name $PUBLIC_NAME --app-version $PUBLIC_VERSION --win-shortcut --win-menu --win-upgrade-uuid $UUID --module-path $MODPATH --module $MAIN_MODULE/$MAIN_CLASS
 
 cd $STARTDIR

@@ -25,24 +25,21 @@ public class AutoTracker implements TrackerListener {
     AutoTrackerListener listener;
 
     SimConnectTracker simConnectTracker;
-
-    String lastFile = "MainMenu";
-
-    int lastSim;
-
-    int lastPause;
-
     boolean inFlight = false;
-
     Flight currentFlight = null;
 
+    String lastFile = "MainMenu";
+    int lastSim;
+    int lastPause;
+    private int lastSimStart;
+    private int lastSimStop;
 
     public AutoTracker(AutoTrackerListener listener) {
         this.listener = listener;
         simConnectTracker = new SimConnectTracker(FlightSimLogConfig.getSimConnectHost(), FlightSimLogConfig.getSimConnectPort(), this);
     }
 
-    public void startTracker()  {
+    public void startTracker() {
         simConnectTracker.startTracker();
     }
 
@@ -55,26 +52,16 @@ public class AutoTracker implements TrackerListener {
     private void descisionMaker() {
 
 
-        if (inFlight) {
-            if (lastFile.contains("MainMenu")) {
-                inFlight = false;
-                flightEnded();
-            }
+        // TBD ...
 
-        } else {
-            if (!lastFile.contains("MainMenu")) {
-                inFlight = true;
-                flightStarted();
-            }
 
-        }
     }
 
 
     @Override
     public void onData(TrackerData data) {
         this.listener.onData(data);
-        if (inFlight && currentFlight != null) {
+        if (inFlight && currentFlight != null && data.getSimulationMeasurement().getCoordLat() != 0.00 && data.getSimulationMeasurement().getCoordLon() != 0.00) {
             currentFlight.getSimulationData().addTrackerData(data);
         }
     }
@@ -92,6 +79,19 @@ public class AutoTracker implements TrackerListener {
         this.lastPause = pause;
         this.listener.onEventPause(pause);
         descisionMaker();
+    }
+
+    @Override
+    public void onEventSimStart(int start) {
+        this.lastSimStart = start;
+        this.listener.onEventSimStart(start);
+    }
+
+
+    @Override
+    public void onEventSimStop(int stop) {
+        this.lastSimStop = stop;
+        this.listener.onEventSimStop(stop);
     }
 
     @Override
@@ -122,7 +122,6 @@ public class AutoTracker implements TrackerListener {
             flightEnded();
         }
 
-
         currentFlight = new Flight();
         currentFlight.setLogbookFile(FlightSimLogController.getInstance().getLogbook().getLogbookFile());
         currentFlight.setId(FlightSimLogController.getInstance().getLogbook().getNextFlightId());
@@ -142,6 +141,8 @@ public class AutoTracker implements TrackerListener {
         }
 
         listener.onFlightStarted();
+
+        inFlight = true;
 
     }
 
@@ -163,8 +164,6 @@ public class AutoTracker implements TrackerListener {
 
 
     private void flightEnded() {
-
-
         if (currentFlight != null) {
 
             SimulationData simulationData = currentFlight.getSimulationData();
@@ -220,7 +219,15 @@ public class AutoTracker implements TrackerListener {
 
             currentFlight = null;
 
-
+            inFlight = false;
         }
+    }
+
+    public void startFlightManually() {
+        flightStarted();
+    }
+
+    public void endFlightManually() {
+        flightEnded();
     }
 }

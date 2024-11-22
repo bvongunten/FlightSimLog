@@ -8,6 +8,10 @@ public interface TrackerListener {
 
    void onEventPause(int pause);
 
+   void onEventSimStart(int start);
+
+   void onEventSimStop(int stop);
+
    void onEventSim(int sim);
 
    void onConnected();
@@ -15,4 +19,6 @@ public interface TrackerListener {
    void onDisconnected();
 
    void onException(Throwable e);
+
+
 }

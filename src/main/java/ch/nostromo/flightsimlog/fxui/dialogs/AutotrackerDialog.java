@@ -4,6 +4,9 @@ import ch.nostromo.flightsimlog.FlightSimLogController;
 import ch.nostromo.flightsimlog.tracker.TrackerData;
 import ch.nostromo.flightsimlog.tracker.autotracker.AutoTracker;
 import ch.nostromo.flightsimlog.tracker.autotracker.AutoTrackerListener;
+import com.github.kwhat.jnativehook.GlobalScreen;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -18,7 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class AutotrackerDialog extends Stage implements AutoTrackerListener {
+public class AutotrackerDialog extends Stage implements AutoTrackerListener, NativeKeyListener {
 
     static final int SLEEP = 5000;
 
@@ -47,13 +50,19 @@ public class AutotrackerDialog extends Stage implements AutoTrackerListener {
 
         VBox.setVgrow(textArea, Priority.ALWAYS);
 
+        Button endFlight = new Button("Finish flight");
+        Button startFlight = new Button("Start flight");
+
         toggleButton = new Button("Start Tracker");
         Button okButton = new Button("Close");
 
         toggleButton.setOnAction(event -> toggleMode());
         okButton.setOnAction(event -> closeDialog());
 
-        HBox buttonBox = new HBox(10, toggleButton, okButton);
+        startFlight.setOnAction(event -> startFlightManually());
+        endFlight.setOnAction(event -> endFlightManually());
+
+        HBox buttonBox = new HBox(10, startFlight, endFlight, toggleButton, okButton);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
         buttonBox.setPadding(new Insets(10));
 
@@ -73,6 +82,18 @@ public class AutotrackerDialog extends Stage implements AutoTrackerListener {
         });
 
         toggleMode();
+
+
+        try {
+
+            if (!GlobalScreen.isNativeHookRegistered()) {
+               GlobalScreen.registerNativeHook();
+            }
+            GlobalScreen.addNativeKeyListener(this);
+        } catch (Exception ignored) {
+            FlightSimLogController.getInstance().showError(ignored);
+        }
+
     }
 
     public void toggleMode() {
@@ -97,6 +118,12 @@ public class AutotrackerDialog extends Stage implements AutoTrackerListener {
             } catch (Exception e) {
                 // ignored
             }
+        }
+
+        try {
+            GlobalScreen.removeNativeKeyListener(this);
+        } catch(Exception ignored) {
+            FlightSimLogController.getInstance().showError(ignored);
         }
 
         // Back to normal exception handler
@@ -174,14 +201,26 @@ public class AutotrackerDialog extends Stage implements AutoTrackerListener {
     }
 
 
+    void startFlightManually() {
+        if (autotracker != null) {
+            autotracker.startFlightManually();
+        }
+    }
+
+    void endFlightManually() {
+        if (autotracker != null) {
+            autotracker.endFlightManually();
+        }
+    }
+
     @Override
     public void onFlightStarted() {
-        addLine(">>>>> Flight started ...");
+        addLine(">>>>>>>>>>> Flight started ...");
     }
 
     @Override
     public void onFlightEnded(String flightDescr) {
-        addLine("<<<<<< Flight ended: " + flightDescr);
+        addLine("<<<<<<<<<<<< Flight ended: " + flightDescr);
     }
 
     @Override
@@ -196,12 +235,23 @@ public class AutotrackerDialog extends Stage implements AutoTrackerListener {
 
     @Override
     public void onEventPause(int pause) {
-        addChar("P" + pause);
+        addLine("Pause: " + pause);
+    }
+
+    @Override
+    public void onEventSimStart(int start) {
+        addLine("SimStart: " + start);
+    }
+
+    @Override
+    public void onEventSimStop(int stop) {
+        addLine("SimStop: " + stop);
+
     }
 
     @Override
     public void onEventSim(int sim) {
-        addChar("S" + sim);
+        addLine("Sim: " + sim);
     }
 
     @Override
@@ -221,5 +271,19 @@ public class AutotrackerDialog extends Stage implements AutoTrackerListener {
         this.lastStart = System.currentTimeMillis();
 
         startTimedTracker();
+    }
+
+
+    /**
+     * Numpad - = stop flight
+     * Numpad + = start flight
+     * @param e
+     */
+    public void nativeKeyPressed(NativeKeyEvent e) {
+        if (e.getKeyCode() == 3658) {
+            endFlightManually();
+        } else if (e.getKeyCode() == 3662) {
+            startFlightManually();
+        }
     }
 }

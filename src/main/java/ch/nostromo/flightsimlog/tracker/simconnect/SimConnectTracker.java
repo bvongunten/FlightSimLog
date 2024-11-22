@@ -67,7 +67,6 @@ public class SimConnectTracker {
             simConnect.getRequestReceiver().addSimobjectDataHandler(this::handleSimObject);
             simConnect.getRequestReceiver().addEventFilenameHandler(this::handleEventFilename);
 
-
             simConnect.addToDataDefinition(1, "PLANE LATITUDE", "DEGREES", DataType.FLOAT64, 0);
             simConnect.addToDataDefinition(1, "PLANE LONGITUDE", "DEGREES", DataType.FLOAT64, 0);
             simConnect.addToDataDefinition(1, "PLANE ALTITUDE", "FEET", DataType.FLOAT64, 0);
@@ -153,10 +152,17 @@ public class SimConnectTracker {
             case 1:
                 listener.onEventPause(recvEventResponse.getEventID());
                 break;
+            case 3:
+                listener.onEventSimStart(recvEventResponse.getData());
+                break;
+            case 4:
+                listener.onEventSimStop(recvEventResponse.getData());
+                break;
             case 5:
-                listener.onEventSim(recvEventResponse.getEventID());
+                listener.onEventSim(recvEventResponse.getData());
                 break;
         }
+
     }
 
 

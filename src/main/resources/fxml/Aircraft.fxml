@@ -23,7 +23,6 @@
       <Label layoutX="33.0" layoutY="243.0" prefHeight="17.0" prefWidth="118.0" text="Speed" />
       <Label layoutX="181.0" layoutY="243.0" prefHeight="17.0" prefWidth="118.0" text="Altitude" />
       <Label layoutX="348.0" layoutY="243.0" prefHeight="17.0" prefWidth="118.0" text="Range" />
-      <Label layoutX="500.0" layoutY="243.0" prefHeight="17.0" prefWidth="118.0" text="Endurance" />
       <Label layoutX="582.0" layoutY="136.0" prefHeight="17.0" prefWidth="118.0" text="Gauges" />
       <Label layoutX="33.0" layoutY="317.0" prefHeight="17.0" prefWidth="118.0" text="Tags &amp; Remarks" />
       <Label layoutX="986.0" layoutY="66.0" prefHeight="17.0" prefWidth="37.0" text="Flights" />
@@ -51,8 +50,6 @@
       <TextField fx:id="txtSpeed" layoutX="93.0" layoutY="239.0" prefHeight="25.0" prefWidth="64.0" />
       <TextField fx:id="txtAltitude" layoutX="255.0" layoutY="239.0" prefHeight="25.0" prefWidth="64.0" />
       <TextField fx:id="txtRange" layoutX="415.0" layoutY="239.0" prefHeight="25.0" prefWidth="64.0" />
-      <TextField fx:id="txtEndurance" layoutX="586.0" layoutY="239.0" prefHeight="25.0" prefWidth="64.0" />
-
 
       <TextField fx:id="txtTags" layoutX="155.0" layoutY="313.0" prefHeight="25.0" prefWidth="970.0" />
       <TextArea fx:id="txtRemarks" layoutX="31.0" layoutY="345.0" prefHeight="200.0" prefWidth="1096.0" />

@@ -59,9 +59,6 @@ public class AircraftController {
     private TextField txtDescription;
 
     @FXML
-    private TextField txtEndurance;
-
-    @FXML
     private TextField txtEngines;
 
     @FXML
@@ -126,7 +123,6 @@ public class AircraftController {
 
         txtSpeed.setText(String.valueOf(aircraft.getSpeed()));
         txtAltitude.setText(String.valueOf(aircraft.getAltitude()));
-        txtEndurance.setText(String.valueOf(aircraft.getEndurance()));
         txtRange.setText(String.valueOf(aircraft.getRange()));
 
         txtTags.setText(String.valueOf(aircraft.getTags()));
@@ -160,7 +156,6 @@ public class AircraftController {
 
         aircraft.setSpeed(Integer.parseInt(txtSpeed.getText()));
         aircraft.setAltitude(Integer.parseInt(txtAltitude.getText()));
-        aircraft.setEndurance(Integer.parseInt(txtEndurance.getText()));
         aircraft.setRange(Integer.parseInt(txtRange.getText()));
 
         aircraft.setTags(txtTags.getText());

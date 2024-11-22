@@ -36,15 +36,15 @@ public class Logbook {
     @XmlElement
     public FlightSim defaultFlightsim = FlightSim.MSFS_2020;
 
+    @XmlElementWrapper(name = "categories")
+    @XmlElement(name = "category")
+    public List<Category> categories = new ArrayList<>();
+
 
     @XmlElementWrapper(name = "aircraft")
     @XmlElement(name = "aircraft")
     public List<Aircraft> aircraft = new ArrayList<>();
 
-
-    @XmlElementWrapper(name = "categories")
-    @XmlElement(name = "category")
-    public List<Category> categories = new ArrayList<>();
 
     @XmlElementWrapper(name = "simAircraft")
     @XmlElement(name = "simAircraft")

@@ -86,6 +86,12 @@
 			<version>2.3.2</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.github.kwhat</groupId>
+			<artifactId>jnativehook</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+
         <!-- Local Modules -->
 
 

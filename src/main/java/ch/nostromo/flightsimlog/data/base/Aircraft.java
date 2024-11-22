@@ -44,9 +44,6 @@ public class Aircraft {
     Integer altitude = 0;
 
     @XmlElement
-    Integer endurance = 0;
-
-    @XmlElement
     Integer range = 0;
 
     @XmlElement

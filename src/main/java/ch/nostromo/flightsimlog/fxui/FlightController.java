@@ -372,6 +372,16 @@ public class FlightController {
                 }
 
                 @Override
+                public void onEventSimStart(int start) {
+
+                }
+
+                @Override
+                public void onEventSimStop(int stop) {
+
+                }
+
+                @Override
                 public void onEventSim(int sim) {
 
                 }

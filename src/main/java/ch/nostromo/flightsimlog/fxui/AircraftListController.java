@@ -112,10 +112,6 @@ public class AircraftListController {
 //        altitude.setCellValueFactory(new PropertyValueFactory<>("altitude"));
 //        table.getColumns().add(altitude);
 
-//        TableColumn<Aircraft, Integer> endurance = new TableColumn<>("Endurance");
-//        endurance.setCellValueFactory(new PropertyValueFactory<>("endurance"));
-//        table.getColumns().add(endurance);
-
         TableColumn<Aircraft, Integer> range = new TableColumn<>("Range");
         range.setCellValueFactory(new PropertyValueFactory<>("range"));
         table.getColumns().add(range);

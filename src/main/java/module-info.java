@@ -17,6 +17,7 @@ module ch.nostromo.flightsimlog {
     requires java.net.http;
     requires org.lembeck.fs.simconnect;
     requires javafx.media;
+    requires com.github.kwhat.jnativehook;
 
     exports ch.nostromo.flightsimlog;
     exports ch.nostromo.flightsimlog.data;
@@ -25,6 +26,7 @@ module ch.nostromo.flightsimlog {
     exports ch.nostromo.flightsimlog.data.flight;
     exports ch.nostromo.flightsimlog.fxui;
     exports ch.nostromo.flightsimlog.fxui.fxutils;
+    exports ch.nostromo.flightsimlog.fxui.dialogs;
 
     opens ch.nostromo.flightsimlog;
     opens ch.nostromo.flightsimlog.data;
@@ -34,7 +36,6 @@ module ch.nostromo.flightsimlog {
 
     opens ch.nostromo.flightsimlog.fxui;
     opens ch.nostromo.flightsimlog.fxui.fxutils;
-    exports ch.nostromo.flightsimlog.fxui.dialogs;
     opens ch.nostromo.flightsimlog.fxui.dialogs;
 
 }

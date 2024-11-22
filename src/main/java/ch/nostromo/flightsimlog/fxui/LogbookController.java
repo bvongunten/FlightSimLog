@@ -119,14 +119,15 @@ public class LogbookController {
         pcDepartureTime.setCellValueFactory(flightStringCellDataFeatures -> new ReadOnlyObjectWrapper<>(new SimpleDateFormat("yyyy.MM.dd HH:mm").format(flightStringCellDataFeatures.getValue().getComputerDepartureTime().getTime())));
         table.getColumns().add(pcDepartureTime);
 
+        TableColumn<Flight, Category> category = new TableColumn<>("Category");
+        category.setCellValueFactory(new PropertyValueFactory<>("category"));
+        table.getColumns().add(category);
+
+
         TableColumn<Flight, String> description = new TableColumn<>("Description");
         description.setCellValueFactory(new PropertyValueFactory<>("description"));
         table.getColumns().add(description);
 
-
-        TableColumn<Flight, Category> category = new TableColumn<>("Category");
-        category.setCellValueFactory(new PropertyValueFactory<>("category"));
-        table.getColumns().add(category);
 
         TableColumn<Flight, Double> distance = new TableColumn<>("Distance");
         distance.setCellValueFactory(flightDoubleCellDataFeatures -> {

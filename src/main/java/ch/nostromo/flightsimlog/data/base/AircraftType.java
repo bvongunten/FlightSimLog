@@ -1,16 +1,13 @@
 package ch.nostromo.flightsimlog.data.base;
 
 public enum AircraftType {
-    AIRLINER("Airliner"),
-    GENERAL_AVIATION("General Aviation"),
-    MILITARY("Military"),
-    AMPHIBIOUS("Amphibious"),
-    GLIDER("Glider"),
-    AEROBATIC("Aerobatic"),
+    AIRPLANE("Airplane"),
     HELICOPTER("Helicopter"),
-    EXPERIMENTAL("Experimental"),
+    GLIDER("Glider"),
+    LIGHTER_THAN_AIR("Lighter Than Air"),
     FICTIONAL("Fictional"),
-    OTHER  ("Other");
+    OTHER  ("Other"),
+    UNDEF  ("Undef");
 
     private final String displayName;
 

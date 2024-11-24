@@ -23,16 +23,13 @@ public class Aircraft {
     String manufacturer = "";
 
     @XmlElement
-    AircraftType aircraftType = AircraftType.OTHER;
+    AircraftType aircraftType = AircraftType.UNDEF;
 
     @XmlElement
     AircraftPropulsion aircraftPropulsion = AircraftPropulsion.OTHER;
 
     @XmlElement
     Integer engines = 0;
-
-    @XmlElement
-    Integer seats = 0;
 
     @XmlElement
     AircraftSeatingType aircraftSeatingType = AircraftSeatingType.OTHER;
@@ -53,7 +50,7 @@ public class Aircraft {
     AircraftGauges gauges = AircraftGauges.STEAM;
 
     @XmlElement
-    Boolean gears = Boolean.TRUE;
+    Boolean gear = Boolean.TRUE;
 
     @XmlElement
     Boolean floats = Boolean.FALSE;

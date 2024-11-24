@@ -20,10 +20,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.UnsupportedEncodingException;
@@ -81,6 +78,9 @@ public class FlightController {
 
     @FXML
     private TextField txtComputerArrivalTime;
+
+    @FXML
+    private CheckBox cbRealTime;
 
 
     @FXML
@@ -158,6 +158,7 @@ public class FlightController {
 
         this.txtComputerDepartureTime.setText(CalendarTools.calToString(flight.getComputerDepartureTime()));
         this.txtComputerArrivalTime.setText(CalendarTools.calToString(flight.getComputerArrivalTime()));
+        this.cbRealTime.setSelected(flight.getRealTime());
 
         this.txtId.setText(flight.getId());
 
@@ -246,6 +247,7 @@ public class FlightController {
 
             flight.setComputerDepartureTime(CalendarTools.stringToCal(txtComputerDepartureTime.getText(), false));
             flight.setComputerArrivalTime(CalendarTools.stringToCal(txtComputerArrivalTime.getText(), false));
+            flight.setRealTime(cbRealTime.isSelected());
 
             flight.setSimAircraft(FlightSimLogController.getInstance().getOrCreateSimAircraft(cbAircraft.getEditor().getText()));
 

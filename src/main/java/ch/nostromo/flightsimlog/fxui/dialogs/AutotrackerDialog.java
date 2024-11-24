@@ -85,10 +85,6 @@ public class AutotrackerDialog extends Stage implements AutoTrackerListener, Nat
 
 
         try {
-
-            if (!GlobalScreen.isNativeHookRegistered()) {
-               GlobalScreen.registerNativeHook();
-            }
             GlobalScreen.addNativeKeyListener(this);
         } catch (Exception ignored) {
             FlightSimLogController.getInstance().showError(ignored);

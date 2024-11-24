@@ -29,7 +29,7 @@ public class AircraftController {
     private ChoiceBox<AircraftGauges> cbGauges;
 
     @FXML
-    private CheckBox cbGears;
+    private CheckBox cbGear;
 
     @FXML
     private CheckBox cbMastered;
@@ -77,9 +77,6 @@ public class AircraftController {
     private TextArea txtRemarks;
 
     @FXML
-    private TextField txtSeats;
-
-    @FXML
     private TextField txtSpeed;
 
     @FXML
@@ -116,8 +113,7 @@ public class AircraftController {
         cbAutopilot.setSelected(aircraft.getAutopilot());
 
         cbSeating.getSelectionModel().select(aircraft.getAircraftSeatingType());
-        txtSeats.setText(String.valueOf(aircraft.getSeats()));
-        cbGears.setSelected(aircraft.getGears());
+        cbGear.setSelected(aircraft.getGear());
         cbSkis.setSelected(aircraft.getSkis());
         cbFloats.setSelected(aircraft.getFloats());
 
@@ -148,9 +144,8 @@ public class AircraftController {
         aircraft.setAutopilot(cbAutopilot.isSelected());
 
         aircraft.setAircraftSeatingType(cbSeating.getValue());
-        aircraft.setSeats(Integer.parseInt(txtSeats.getText()));
 
-        aircraft.setGears(cbGears.isSelected());
+        aircraft.setGear(cbGear.isSelected());
         aircraft.setSkis(cbSkis.isSelected());
         aircraft.setFloats(cbFloats.isSelected());
 

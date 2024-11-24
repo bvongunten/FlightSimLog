@@ -3,10 +3,12 @@ package ch.nostromo.flightsimlog.fxui;
 
 import ch.nostromo.flightsimlog.FlightSimLogController;
 import ch.nostromo.flightsimlog.data.Logbook;
+import ch.nostromo.flightsimlog.data.base.Aircraft;
 import ch.nostromo.flightsimlog.data.base.Category;
 import ch.nostromo.flightsimlog.data.flight.Flight;
 import ch.nostromo.flightsimlog.fxui.dialogs.AutotrackerDialog;
 import ch.nostromo.flightsimlog.fxui.dialogs.TextMessageDialog;
+import ch.nostromo.flightsimlog.fxui.fxutils.CheckBoxCellFactory;
 import ch.nostromo.flightsimlog.fxui.fxutils.TableViewResizer;
 import ch.nostromo.flightsimlog.statistics.Statistics;
 import ch.nostromo.flightsimlog.utils.GeoJson;
@@ -162,6 +164,11 @@ public class LogbookController {
         to.setCellValueFactory(flightDoubleCellDataFeatures -> new ReadOnlyObjectWrapper<>(flightDoubleCellDataFeatures.getValue().getArrivalPosition().getIcao()));
         table.getColumns().add(to);
 
+        TableColumn<Flight, Boolean> mastered = new TableColumn<>("RealTime");
+        mastered.setCellValueFactory(new PropertyValueFactory<>("realTime"));
+        mastered.setCellFactory(new CheckBoxCellFactory<>());
+        table.getColumns().add(mastered);
+
 
         paneFlights.setCenter(table);
 
@@ -262,6 +269,7 @@ public class LogbookController {
     }
 
     public void closeForm() {
-        Platform.exit();
+
+        FlightSimLogController.getInstance().shutDown();
     }
 }

@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="841.0" prefWidth="1157.0" xmlns="http://javafx.com/javafx/17.0.13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.nostromo.flightsimlog.fxui.AircraftController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="841.0" prefWidth="1157.0" xmlns="http://javafx.com/javafx/17.0.3" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.nostromo.flightsimlog.fxui.AircraftController">
    <children>
       <Label layoutX="33.0" layoutY="29.0" prefHeight="17.0" prefWidth="118.0" text="Manufacturer" />
       <Label layoutX="415.0" layoutY="29.0" prefHeight="17.0" prefWidth="118.0" text="Aircraft" />
@@ -19,7 +19,6 @@
       <Label layoutX="33.0" layoutY="136.0" prefHeight="17.0" prefWidth="118.0" text="Propulsion" />
       <Label layoutX="415.0" layoutY="136.0" prefHeight="17.0" prefWidth="118.0" text="Engines" />
       <Label layoutX="33.0" layoutY="175.0" prefHeight="17.0" prefWidth="118.0" text="Seating" />
-      <Label layoutX="415.0" layoutY="175.0" prefHeight="17.0" prefWidth="118.0" text="Seats" />
       <Label layoutX="33.0" layoutY="243.0" prefHeight="17.0" prefWidth="118.0" text="Speed" />
       <Label layoutX="181.0" layoutY="243.0" prefHeight="17.0" prefWidth="118.0" text="Altitude" />
       <Label layoutX="348.0" layoutY="243.0" prefHeight="17.0" prefWidth="118.0" text="Range" />
@@ -41,9 +40,8 @@
       <CheckBox fx:id="cbAutopilot" layoutX="934.0" layoutY="136.0" mnemonicParsing="false" text="Autopilot" />
 
       <ChoiceBox fx:id="cbSeating" layoutX="159.0" layoutY="171.0" prefHeight="25.0" prefWidth="231.0" />
-      <TextField fx:id="txtSeats" layoutX="487.0" layoutY="172.0" prefHeight="25.0" prefWidth="64.0" />
 
-      <CheckBox fx:id="cbGears" layoutX="586.0" layoutY="175.0" mnemonicParsing="false" text="Gears" />
+      <CheckBox fx:id="cbGear" layoutX="586.0" layoutY="175.0" mnemonicParsing="false" text="Gear" />
       <CheckBox fx:id="cbSkis" layoutX="679.0" layoutY="176.0" mnemonicParsing="false" text="Skis" />
       <CheckBox fx:id="cbFloats" layoutX="766.0" layoutY="176.0" mnemonicParsing="false" text="Floats" />
 

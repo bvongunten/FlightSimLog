@@ -13,6 +13,8 @@ import ch.nostromo.flightsimlog.fxui.dialogs.CategoriesDialog;
 import ch.nostromo.flightsimlog.fxui.dialogs.SettingsDialog;
 import ch.nostromo.flightsimlog.fxui.dialogs.TextMessageDialog;
 import ch.nostromo.flightsimlog.utils.LogBookTools;
+import com.github.kwhat.jnativehook.GlobalScreen;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -56,6 +58,15 @@ public class FlightSimLogController {
     }
 
     public void initializeAndLoadLogbook() {
+
+
+        try {
+            GlobalScreen.registerNativeHook();
+        } catch (Exception ignored) {
+            FlightSimLogController.getInstance().showError(ignored);
+        }
+
+
         String logBookFileName = FlightSimLogConfig.getLogbookFile();
 
         File logBookFile = null;
@@ -310,4 +321,15 @@ public class FlightSimLogController {
     }
 
 
+    public void shutDown() {
+
+        try {
+            GlobalScreen.unregisterNativeHook();
+        } catch (Exception ignored) {
+            FlightSimLogController.getInstance().showError(ignored);
+        }
+
+        Platform.exit();
+
+    }
 }

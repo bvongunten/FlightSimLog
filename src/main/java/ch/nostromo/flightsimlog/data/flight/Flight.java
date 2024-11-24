@@ -53,6 +53,9 @@ public class Flight {
     @XmlElement
     Calendar computerArrivalTime;
 
+    @XmlElement
+    Boolean realTime = Boolean.TRUE;
+
     @XmlTransient
     SimulationData simulationData = null;
 
@@ -99,6 +102,8 @@ public class Flight {
         if  (input.computerArrivalTime != null) {
             computerArrivalTime = (Calendar) input.computerArrivalTime.clone();
         }
+
+        realTime = input.realTime;
 
 
         if (input.getSimulationData() != null) {

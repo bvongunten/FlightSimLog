@@ -46,7 +46,7 @@ public class AutoTracker implements TrackerListener {
     public void stopTracker() {
         simConnectTracker.stopTracker();
 
-        flightEnded();
+      //  flightEnded();
     }
 
     private void descisionMaker() {

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <style>
+
+        /* Prevent global styles from interfering */
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Prevent horizontal scroll from map overflow */
+        }
+
+        .container {
+            max-width: 90%; /* Adjust to screen width */
+            margin: 20px auto; /* Center the container */
+        }
+
+        td, th {
+            white-space: nowrap; /* Prevent line breaks in table cells */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    %%TITLE%%
+
+    %%CONTENT%%
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const table = document.querySelector("table");
+        const headers = table.querySelectorAll("th.sortable");
+
+        headers.forEach(header => {
+            header.addEventListener("click", () => {
+                const tableBody = table.querySelector("tbody");
+                const rows = Array.from(tableBody.querySelectorAll("tr"));
+                const index = Array.from(header.parentNode.children).indexOf(header);
+                const isAscending = header.classList.toggle("asc");
+                header.classList.toggle("desc", !isAscending);
+
+                rows.sort((rowA, rowB) => {
+                    const cellA = rowA.children[index].textContent.trim();
+                    const cellB = rowB.children[index].textContent.trim();
+                    return isAscending
+                        ? cellA.localeCompare(cellB, undefined, {numeric: true})
+                        : cellB.localeCompare(cellA, undefined, {numeric: true});
+                });
+
+                rows.forEach(row => tableBody.appendChild(row));
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

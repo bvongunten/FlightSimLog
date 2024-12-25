@@ -12,6 +12,7 @@ import ch.nostromo.flightsimlog.data.flight.FlightSim;
 import ch.nostromo.flightsimlog.data.coordinates.SimulationMeasurement;
 import ch.nostromo.flightsimlog.data.flight.Flight;
 import ch.nostromo.flightsimlog.data.flight.SimulationData;
+import ch.nostromo.flightsimlog.fxui.dialogs.ImageViewerDialog;
 import ch.nostromo.flightsimlog.tracker.TrackerData;
 import ch.nostromo.flightsimlog.tracker.TrackerListener;
 import ch.nostromo.flightsimlog.tracker.simconnect.SimConnectTracker;
@@ -106,9 +107,6 @@ public class FlightController {
 
 
     Flight flight;
-
-    SimConnectTracker simConnectTracker;
-    ScreenshotGrabber screenshotGrabber;
 
     @FXML
     void onCancel(ActionEvent event) {
@@ -338,83 +336,8 @@ public class FlightController {
     }
 
     @FXML
-    void onImageToggle(ActionEvent event) {
-
-        if (screenshotGrabber == null) {
-            screenshotGrabber = new ScreenshotGrabber(flight);
-            screenshotGrabber.start();
-            btnImageGrabber.setText("Stop Image Grabber");
-        } else {
-            screenshotGrabber.setRunning(false);
-            screenshotGrabber = null;
-            btnImageGrabber.setText("Start Image Grabber");
-        }
-
-    }
-
-    @FXML
-    void onSimconnectToggle(ActionEvent event) {
-
-        if (simConnectTracker == null) {
-            simConnectTracker = new SimConnectTracker(FlightSimLogConfig.getSimConnectHost(), FlightSimLogConfig.getSimConnectPort(), new TrackerListener() {
-                @Override
-                public void onData(TrackerData data) {
-                    flight.getSimulationData().addTrackerData(data);
-                    updateFlightInfos();
-                }
-
-                @Override
-                public void onEventFileLoaded(String file) {
-
-                }
-
-                @Override
-                public void onEventPause(int pause) {
-
-                }
-
-                @Override
-                public void onEventSimStart(int start) {
-
-                }
-
-                @Override
-                public void onEventSimStop(int stop) {
-
-                }
-
-                @Override
-                public void onEventSim(int sim) {
-
-                }
-
-                @Override
-                public void onConnected() {
-
-                }
-
-                @Override
-                public void onDisconnected() {
-
-                }
-
-                @Override
-                public void onException(Throwable e) {
-
-                }
-            });
-
-            simConnectTracker.startTracker();
-
-            this.btnTracker.setText("Stop FS tracker");
-
-        } else {
-            simConnectTracker.stopTracker();
-            simConnectTracker = null;
-
-            this.btnTracker.setText("Start FS tracker");
-        }
-
+    void onImageViewer() {
+        new ImageViewerDialog(null, flight.getFlightImagesPath()).show();
     }
 
     @FXML
@@ -487,24 +410,6 @@ public class FlightController {
 
 
     public void closeForm() {
-
-        try {
-            if (simConnectTracker != null) {
-                simConnectTracker.stopTracker();
-                simConnectTracker = null;
-            }
-        } catch (Exception e) {
-            // Nah ...
-        }
-
-        try {
-            if (screenshotGrabber != null) {
-                screenshotGrabber.setRunning(false);
-                screenshotGrabber = null;
-            }
-        } catch (Exception e) {
-            // Nah ...
-        }
 
         // Close frame
         Stage stage = (Stage) txtId.getScene().getWindow();

@@ -1,4 +1,4 @@
-package ch.nostromo.flightsimlog.statistics;
+package ch.nostromo.flightsimlog.reports;
 
 import ch.nostromo.flightsimlog.data.base.SimAircraft;
 import lombok.Data;
@@ -12,9 +12,6 @@ public class AircraftStatistics {
 
     double totalDistance;
 
-
     double totalSeconds;
-
-
 
 }

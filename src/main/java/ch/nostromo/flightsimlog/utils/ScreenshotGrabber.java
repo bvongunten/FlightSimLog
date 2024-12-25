@@ -7,17 +7,19 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
-import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
 public class ScreenshotGrabber extends Thread {
+
+
+    String sourcedirectory = "C:\\Users\\bvg\\appdata\\Roaming\\Microsoft Flight Simulator 2024\\Screenshot";
 
 
     int currentFilesCount = 0;
@@ -25,20 +27,31 @@ public class ScreenshotGrabber extends Thread {
     boolean running = false;
 
     String prefix;
-    File dir;
+
+    File sourceDir;
+    File targetDir;
+
+    List<File> knownFiles = new ArrayList<>();
 
     public ScreenshotGrabber(Flight flight) {
         this.prefix = flight.getId();
-        this.dir = flight.getFlightImagesPath();
+        this.targetDir = flight.getFlightImagesPath();
         this.currentFilesCount = flight.getImagesCount();
 
-        // Flush clipboard
-        try {
-            Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
-        } catch (Exception ignore) {
-            // Ignore
+
+        sourceDir = new File(sourcedirectory);
+
+        if (sourceDir.exists() && sourceDir.isDirectory()) {
+            knownFiles = Arrays.stream(sourceDir.listFiles())
+                    .filter(File::isFile)
+                    .collect(Collectors.toList());
         }
 
+
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 
     @SneakyThrows
@@ -48,29 +61,29 @@ public class ScreenshotGrabber extends Thread {
         while (running) {
 
             try {
-                Transferable content = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+                List<File> currentFiles = Arrays.stream(sourceDir.listFiles())
+                        .filter(File::isFile)
+                        .collect(Collectors.toList());
 
-                if (content != null && content.isDataFlavorSupported(DataFlavor.imageFlavor)) {
-                    currentFilesCount++;
+                for (File currentFile : currentFiles) {
+                    if (!knownFiles.contains(currentFile)) {
 
-                    BufferedImage img = (BufferedImage) content.getTransferData(DataFlavor.imageFlavor);
-                    String fileName = this.prefix + "-" + System.currentTimeMillis() + ".png";
+                        if (!targetDir.exists()) {
+                            targetDir.mkdirs();
+                        }
 
-                    if (!dir.exists()) {
-                        dir.mkdirs();
+                        File targetFile = new File(targetDir, currentFile.getName());
+                        currentFile.renameTo(targetFile);
+                        Toolkit.getDefaultToolkit().beep();
+
                     }
 
-                    File outfile = new File(dir, fileName);
-                    ImageIO.write(img, "png", outfile);
-
-                    StringSelection stringSelection = new StringSelection("Screenshot grabbed and saved to " + outfile.getAbsolutePath());
-                    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
-
-                    Toolkit.getDefaultToolkit().beep();
-
                 }
+
+                knownFiles = currentFiles;
+
             } catch (Exception e) {
-                throw new FlightSimLogException("Unable to grab image with message: " + e.getMessage(), e);
+                throw new FlightSimLogException("Unable to copy image with message: " + e.getMessage(), e);
             }
 
             try {

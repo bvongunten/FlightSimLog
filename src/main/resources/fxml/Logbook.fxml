@@ -20,7 +20,7 @@
            <children>
               <Button fx:id="btnCreateFlight" layoutX="28.0" layoutY="36.0" mnemonicParsing="false" onAction="#onCreateFlight" prefHeight="25.0" prefWidth="100.0" text="Create Flight" />
               <Button fx:id="btnAircraft" layoutX="356.0" layoutY="36.0" mnemonicParsing="false" onAction="#onAircraft" prefHeight="25.0" prefWidth="100.0" text="Aircraft" />
-              <Button fx:id="btnStatistics" layoutX="736.0" layoutY="36.0" mnemonicParsing="false" onAction="#onStatistics" prefHeight="25.0" prefWidth="100.0" text="Statistics" />
+              <Button fx:id="btnReports" layoutX="736.0" layoutY="36.0" mnemonicParsing="false" onAction="#onReports" prefHeight="25.0" prefWidth="100.0" text="Reports" />
               <Button layoutX="1372.0" layoutY="36.0" mnemonicParsing="false" onAction="#onSettings" prefHeight="25.0" prefWidth="100.0" text="Settings" />
 
               <Button fx:id="btnAutoTracker" layoutX="28.0" layoutY="80.0" mnemonicParsing="false" onAction="#onAutotracker" prefHeight="25.0" prefWidth="100.0" text="Auto tracker" />

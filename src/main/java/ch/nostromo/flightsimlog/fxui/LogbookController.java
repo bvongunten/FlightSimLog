@@ -3,16 +3,14 @@ package ch.nostromo.flightsimlog.fxui;
 
 import ch.nostromo.flightsimlog.FlightSimLogController;
 import ch.nostromo.flightsimlog.data.Logbook;
-import ch.nostromo.flightsimlog.data.base.Aircraft;
 import ch.nostromo.flightsimlog.data.base.Category;
 import ch.nostromo.flightsimlog.data.flight.Flight;
 import ch.nostromo.flightsimlog.fxui.dialogs.AutotrackerDialog;
 import ch.nostromo.flightsimlog.fxui.dialogs.TextMessageDialog;
 import ch.nostromo.flightsimlog.fxui.fxutils.CheckBoxCellFactory;
 import ch.nostromo.flightsimlog.fxui.fxutils.TableViewResizer;
-import ch.nostromo.flightsimlog.statistics.Statistics;
+import ch.nostromo.flightsimlog.reports.Reports;
 import ch.nostromo.flightsimlog.utils.GeoJson;
-import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -58,7 +56,7 @@ public class LogbookController {
     Button btnCategories;
 
     @FXML
-    Button btnStatistics;
+    Button btnReports;
 
     Logbook logbook = null;
 
@@ -77,7 +75,7 @@ public class LogbookController {
             btnGeoJsonAirport.setDisable(false);
             btnCreateFlight.setDisable(false);
             btnCategories.setDisable(false);
-            btnStatistics.setDisable(false);
+            btnReports.setDisable(false);
             cbCategories.setDisable(false);
         } else {
             btnAircraft.setDisable(true);
@@ -86,7 +84,7 @@ public class LogbookController {
             btnGeoJsonAirport.setDisable(true);
             btnCreateFlight.setDisable(true);
             btnCategories.setDisable(true);
-            btnStatistics.setDisable(false);
+            btnReports.setDisable(false);
             cbCategories.setDisable(true);
         }
 
@@ -163,6 +161,10 @@ public class LogbookController {
         TableColumn<Flight, String> to = new TableColumn<>("To");
         to.setCellValueFactory(flightDoubleCellDataFeatures -> new ReadOnlyObjectWrapper<>(flightDoubleCellDataFeatures.getValue().getArrivalPosition().getIcao()));
         table.getColumns().add(to);
+
+        TableColumn<Flight, String> imgCount = new TableColumn<>("Images");
+        imgCount.setCellValueFactory(new PropertyValueFactory<>("imagesCount"));
+        table.getColumns().add(imgCount);
 
         TableColumn<Flight, Boolean> mastered = new TableColumn<>("RealTime");
         mastered.setCellValueFactory(new PropertyValueFactory<>("realTime"));
@@ -249,8 +251,8 @@ public class LogbookController {
     }
 
     @FXML
-    void onStatistics(ActionEvent event) {
-        Statistics.createStatistics(logbook.getFilteredFlightList(currentFilter));
+    void onReports(ActionEvent event) {
+        Reports.createReports(logbook);
     }
 
     @FXML

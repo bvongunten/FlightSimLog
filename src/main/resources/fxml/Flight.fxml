@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="671.0" prefWidth="1123.0" xmlns="http://javafx.com/javafx/17.0.13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.nostromo.flightsimlog.fxui.FlightController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="671.0" prefWidth="1123.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.nostromo.flightsimlog.fxui.FlightController">
    <children>
 
       <Line endX="995.0" layoutX="113.0" layoutY="135.0" startX="-100.0" />
@@ -76,16 +76,15 @@
       <TextField fx:id="txtDuration" disable="true" editable="false" layoutX="320.0" layoutY="402.0" prefHeight="25.0" prefWidth="85.0" />
 
 
-      <Label layoutX="452.0" layoutY="543.0" prefHeight="17.0" prefWidth="60.0" text="FP Entries" />
+      <Label layoutX="306.0" layoutY="543.0" prefHeight="17.0" prefWidth="60.0" text="FP Entries" />
       <Label layoutX="886.0" layoutY="543.0" prefHeight="17.0" prefWidth="60.0" text="Images" />
 
-      <TextField fx:id="txtSimulationMeasurements" disable="true" editable="false" layoutX="566.0" layoutY="539.0" prefHeight="25.0" prefWidth="85.0" />
+      <TextField fx:id="txtSimulationMeasurements" disable="true" editable="false" layoutX="420.0" layoutY="539.0" prefHeight="25.0" prefWidth="85.0" />
       <TextField fx:id="txtImagesCount" disable="true" editable="false" layoutX="1000.0" layoutY="539.0" prefHeight="25.0" prefWidth="85.0" />
 
       <Label layoutX="14.0" layoutY="543.0" prefHeight="17.0" prefWidth="91.0" text="Grabber" />
-      <Button fx:id="btnTracker" layoutX="125.0" layoutY="539.0" mnemonicParsing="false" onAction="#onSimconnectToggle" prefHeight="25.0" prefWidth="149.0" text="Start FS Tracker" />
-      <Button layoutX="288.0" layoutY="539.0" mnemonicParsing="false" onAction="#onSimulationDataMerge" prefHeight="25.0" prefWidth="150.0" text="Merge Grabbed Data" />
-      <Button fx:id="btnImageGrabber" layoutX="711.0" layoutY="539.0" mnemonicParsing="false" onAction="#onImageToggle" prefHeight="25.0" prefWidth="149.0" text="Start Image Grabber" />
+      <Button layoutX="126.0" layoutY="539.0" mnemonicParsing="false" onAction="#onSimulationDataMerge" prefHeight="25.0" prefWidth="150.0" text="Merge Grabbed Data" />
+      <Button layoutX="710.0" layoutY="539.0" mnemonicParsing="false" onAction="#onImageViewer" prefHeight="25.0" prefWidth="150.0" text="Image Viewer" />
 
       
       <Button layoutX="17.0" layoutY="611.0" mnemonicParsing="false" onAction="#onGetGeoJson" prefHeight="25.0" prefWidth="85.0" text="Get GeoJson" />

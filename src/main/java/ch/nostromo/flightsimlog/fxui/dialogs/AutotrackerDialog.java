@@ -4,6 +4,7 @@ import ch.nostromo.flightsimlog.FlightSimLogController;
 import ch.nostromo.flightsimlog.tracker.TrackerData;
 import ch.nostromo.flightsimlog.tracker.autotracker.AutoTracker;
 import ch.nostromo.flightsimlog.tracker.autotracker.AutoTrackerListener;
+import ch.nostromo.flightsimlog.utils.ScreenshotGrabber;
 import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
@@ -29,6 +30,7 @@ public class AutotrackerDialog extends Stage implements AutoTrackerListener, Nat
     static final int HEIGHT = 600;
 
     AutoTracker autotracker;
+
 
     TextArea textArea;
     Button toggleButton;

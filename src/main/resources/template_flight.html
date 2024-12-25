@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css">
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            position: relative;
+        }
+
+        /* Prevent global styles from interfering */
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Prevent horizontal scroll from map overflow */
+        }
+
+        .container {
+            max-width: 90%; /* Adjust to screen width */
+            margin: 20px auto; /* Center the container */
+        }
+
+        table {
+            border-collapse: collapse; /* Ensures consistent border spacing */
+            width: 100%; /* Adjust as needed */
+        }
+
+        td, th {
+            border: none; /* Remove borders */
+            white-space: nowrap; /* Prevent line breaks */
+            padding: 8px; /* Add some spacing */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    %%TITLE%%
+
+    <div id="map"></div>
+
+    <table>
+        <tbody>
+        <tr>
+            <td>Description</td>
+            <td>%%DESCRIPTION%%</td>
+            <td>Distance</td>
+            <td>%%DISTANCE%%</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Aircraft</td>
+            <td>%%AIRCRAFT%%</td>
+            <td>Duration</td>
+            <td>%%DURATION%%</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Departure Time</td>
+            <td>%%DEPARTURE_TIME%%</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Departure ICAO / Description</td>
+            <td>%%DEPARTURE_TEXT%%</td>
+            <td>Coords</td>
+            <td>%%DEPARTURE_LON%%</td>
+            <td>%%DEPARTURE_LAT%%</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Arrival Time</td>
+            <td>%%ARRIVAL_TIME%%</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Arrival ICAO / Description</td>
+            <td>%%ARRIVAL_TEXT%%</td>
+            <td>Coords</td>
+            <td>%%ARRIVAL_LON%%</td>
+            <td>%%ARRIVAL_LAT%%</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>PC Departure Time</td>
+            <td>%%DEPARTURE_PC%%</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>PC Arrival Time</td>
+            <td>%%ARRIVAL_PC%%</td>
+            <td>ID</td>
+            <td>%%ID%%</td>
+            <td>&nbsp;</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+</div>
+
+<script>
+    const geojsonString = `%%GEOJSON%%`;
+    const geojsonData = JSON.parse(geojsonString);
+
+    const map = L.map('map');
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const geoJsonLayer = L.geoJSON(geojsonData).addTo(map);
+
+    map.fitBounds(geoJsonLayer.getBounds());
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const table = document.querySelector("table");
+        const headers = table.querySelectorAll("th.sortable");
+
+        headers.forEach(header => {
+            header.addEventListener("click", () => {
+                const tableBody = table.querySelector("tbody");
+                const rows = Array.from(tableBody.querySelectorAll("tr"));
+                const index = Array.from(header.parentNode.children).indexOf(header);
+                const isAscending = header.classList.toggle("asc");
+                header.classList.toggle("desc", !isAscending);
+
+                rows.sort((rowA, rowB) => {
+                    const cellA = rowA.children[index].textContent.trim();
+                    const cellB = rowB.children[index].textContent.trim();
+                    return isAscending
+                        ? cellA.localeCompare(cellB, undefined, {numeric: true})
+                        : cellB.localeCompare(cellA, undefined, {numeric: true});
+                });
+
+                rows.forEach(row => tableBody.appendChild(row));
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -13,6 +13,7 @@ import ch.nostromo.flightsimlog.data.flight.SimulationData;
 import ch.nostromo.flightsimlog.tracker.TrackerData;
 import ch.nostromo.flightsimlog.tracker.TrackerListener;
 import ch.nostromo.flightsimlog.tracker.simconnect.SimConnectTracker;
+import ch.nostromo.flightsimlog.utils.ScreenshotGrabber;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -34,6 +35,8 @@ public class AutoTracker implements TrackerListener {
     private int lastSimStart;
     private int lastSimStop;
 
+    ScreenshotGrabber screenshotGrabber;
+
     public AutoTracker(AutoTrackerListener listener) {
         this.listener = listener;
         simConnectTracker = new SimConnectTracker(FlightSimLogConfig.getSimConnectHost(), FlightSimLogConfig.getSimConnectPort(), this);
@@ -45,6 +48,11 @@ public class AutoTracker implements TrackerListener {
 
     public void stopTracker() {
         simConnectTracker.stopTracker();
+
+        if (screenshotGrabber != null) {
+            screenshotGrabber.setRunning(false);
+            screenshotGrabber = null;
+        }
 
       //  flightEnded();
     }
@@ -144,6 +152,9 @@ public class AutoTracker implements TrackerListener {
 
         inFlight = true;
 
+        screenshotGrabber = new ScreenshotGrabber(currentFlight);
+        screenshotGrabber.start();
+
     }
 
 
@@ -164,7 +175,11 @@ public class AutoTracker implements TrackerListener {
 
 
     private void flightEnded() {
+        screenshotGrabber.setRunning(false);
+        screenshotGrabber = null;
+
         if (currentFlight != null) {
+
 
             SimulationData simulationData = currentFlight.getSimulationData();
 

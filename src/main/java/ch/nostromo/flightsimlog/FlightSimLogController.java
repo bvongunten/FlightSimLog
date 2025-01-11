@@ -12,6 +12,7 @@ import ch.nostromo.flightsimlog.fxui.LogbookController;
 import ch.nostromo.flightsimlog.fxui.dialogs.CategoriesDialog;
 import ch.nostromo.flightsimlog.fxui.dialogs.SettingsDialog;
 import ch.nostromo.flightsimlog.fxui.dialogs.TextMessageDialog;
+import ch.nostromo.flightsimlog.reports.Reports;
 import ch.nostromo.flightsimlog.utils.LogBookTools;
 import com.github.kwhat.jnativehook.GlobalScreen;
 import javafx.application.Platform;
@@ -157,6 +158,10 @@ public class FlightSimLogController {
         logbook.getSimAircraft().add(result);
 
         return result;
+    }
+
+    public void createReports()  {
+        Reports.createReports(logbook);
     }
 
     public void createFlight() {

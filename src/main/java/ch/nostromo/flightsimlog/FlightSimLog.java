@@ -3,20 +3,28 @@ package ch.nostromo.flightsimlog;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.util.Map;
+
 public class FlightSimLog extends Application {
 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javafx.application.Application#start(javafx.stage.Stage)
      */
     @Override
-    public void start(Stage primaryStage)  {
+    public void start(Stage primaryStage) {
+
+
         FlightSimLogController.createInstance(primaryStage);
 
-        FlightSimLogController.getInstance().showLogBook();
-
+        if (!getParameters().getRaw().isEmpty() && getParameters().getRaw().getFirst().equalsIgnoreCase("reports")) {
+            FlightSimLogController.getInstance().createReports();
+            FlightSimLogController.getInstance().shutDown();
+        } else {
+            FlightSimLogController.getInstance().showLogBook();
+        }
         Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
             FlightSimLogController.getInstance().showError(throwable);
         });
@@ -27,11 +35,10 @@ public class FlightSimLog extends Application {
     /**
      * The main method.
      *
-     * @param args
-     *            the arguments
+     * @param args the arguments
      */
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }

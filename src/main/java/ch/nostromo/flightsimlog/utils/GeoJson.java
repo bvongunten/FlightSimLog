@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.lang.Math.*;
+
 public class GeoJson {
 
     public static String createGeoJson(Flight flight, boolean includePath) {
@@ -74,23 +76,119 @@ public class GeoJson {
     }
 
     private static void addPath(FeatureCollection featureCollection, Flight flight) {
-        Feature feature = new Feature();
-        LineString line = new LineString();
+        List<Coordinates> coordinates = new ArrayList<>();
 
         if (flight.getSimulationData().getMeasurements().size() > 1) {
-            for (Coordinates coords : flight.getSimulationData().getMeasurements()) {
-                line.getCoordinates().add(new LngLatAlt(coords.getCoordLon(), coords.getCoordLat()));
-            }
+            coordinates.addAll(flight.getSimulationData().getMeasurements());
         } else {
-            line.getCoordinates().add(new LngLatAlt(flight.getDeparturePosition().getCoordLon(), flight.getDeparturePosition().getCoordLat()));
-            line.getCoordinates().add(new LngLatAlt(flight.getArrivalPosition().getCoordLon(), flight.getArrivalPosition().getCoordLat()));
+            coordinates.add(flight.getDeparturePosition());
+            coordinates.add(flight.getArrivalPosition());
         }
+        Coordinates lastCoordinates = null;
 
-        feature.setProperty("title", flight.getDescription());
 
-        feature.setGeometry(line);
-        featureCollection.add(feature);
+        for (Coordinates coordinate : coordinates) {
+
+            if (lastCoordinates != null) {
+                Feature mainLineFeature = new Feature();
+                LineString mainLineString = new LineString();
+
+                double lonDifference = Math.abs(coordinate.getCoordLon() - lastCoordinates.getCoordLon());
+
+                if (lonDifference > 180) {
+
+                    if (lastCoordinates.getCoordLon() > 0 && coordinate.getCoordLon() < 0) {
+                        // Crossing from + to -
+                        LineString firstLine = new LineString();
+                        firstLine.getCoordinates().add(new LngLatAlt(lastCoordinates.getCoordLon(), lastCoordinates.getCoordLat()));
+                        firstLine.getCoordinates().add(new LngLatAlt(179.9, vincentyLat(lastCoordinates.getCoordLat(), lastCoordinates.getCoordLon(), 179.9, coordinate.getCoordLat(), coordinate.getCoordLon())));
+                        mainLineFeature.setGeometry(firstLine);
+                        featureCollection.add(mainLineFeature);
+
+                        Feature secondLineFeature = new Feature();
+                        LineString secondLine = new LineString();
+                        secondLine.getCoordinates().add(new LngLatAlt(-179.9, vincentyLat(lastCoordinates.getCoordLat(), lastCoordinates.getCoordLon(), -179.9, coordinate.getCoordLat(), coordinate.getCoordLon())));
+                        secondLine.getCoordinates().add(new LngLatAlt(coordinate.getCoordLon(), coordinate.getCoordLat()));
+                        secondLineFeature.setGeometry(secondLine);
+                        featureCollection.add(secondLineFeature);
+
+                    } else if (lastCoordinates.getCoordLon() < 0 && coordinate.getCoordLon() > 0) {
+                        // Crossing from - to +
+                        LineString firstLine = new LineString();
+                        firstLine.getCoordinates().add(new LngLatAlt(lastCoordinates.getCoordLon(), lastCoordinates.getCoordLat()));
+                        firstLine.getCoordinates().add(new LngLatAlt(-179.9, vincentyLat(lastCoordinates.getCoordLat(), lastCoordinates.getCoordLon(), -179.9, coordinate.getCoordLat(), coordinate.getCoordLon())));
+                        mainLineFeature.setGeometry(firstLine);
+                        featureCollection.add(mainLineFeature);
+
+                        Feature secondLineFeature = new Feature();
+                        LineString secondLine = new LineString();
+                        secondLine.getCoordinates().add(new LngLatAlt(179.9, vincentyLat(lastCoordinates.getCoordLat(), lastCoordinates.getCoordLon(), 179.9, coordinate.getCoordLat(), coordinate.getCoordLon())));
+                        secondLine.getCoordinates().add(new LngLatAlt(coordinate.getCoordLon(), coordinate.getCoordLat()));
+                        secondLineFeature.setGeometry(secondLine);
+                        featureCollection.add(secondLineFeature);
+                    }
+
+                } else {
+                    // If no crossing, just create one line
+                    mainLineString.getCoordinates().add(new LngLatAlt(lastCoordinates.getCoordLon(), lastCoordinates.getCoordLat()));
+                    mainLineString.getCoordinates().add(new LngLatAlt(coordinate.getCoordLon(), coordinate.getCoordLat()));
+                    mainLineFeature.setGeometry(mainLineString);
+                    featureCollection.add(mainLineFeature);
+                }
+            }
+
+            lastCoordinates = coordinate;
+
+        }
     }
 
+    /**
+     * Vincenty's formulae to calculate the latitude at an intermediate longitude.
+     *
+     * @param lat1            Latitude of the starting point
+     * @param lon1            Longitude of the starting point
+     * @param lonIntermediate The intermediate longitude to calculate latitude for
+     * @param lat2            Latitude of the end point
+     * @param lon2            Longitude of the end point
+     * @return Interpolated latitude at the intermediate longitude
+     */
+    private static double vincentyLat(double lat1, double lon1, double lonIntermediate, double lat2, double lon2) {
+        // Convert degrees to radians
+        lat1 = toRadians(lat1);
+        lon1 = toRadians(lon1);
+        lat2 = toRadians(lat2);
+        lon2 = toRadians(lon2);
+        lonIntermediate = toRadians(lonIntermediate);
+
+        // Vincenty's constants
+        double a = 6378137.0; // Equatorial radius in meters
+        double f = 1 / 298.257223563; // Flattening
+        double b = (1 - f) * a;
+
+        double dLon = lon2 - lon1;
+
+        double U1 = atan((1 - f) * tan(lat1));
+        double U2 = atan((1 - f) * tan(lat2));
+        double sinU1 = sin(U1), cosU1 = cos(U1);
+        double sinU2 = sin(U2), cosU2 = cos(U2);
+
+        double sinSigma, cosSigma, sigma, sinAlpha, cos2Alpha, cos2SigmaM;
+        double lambda = dLon, lambdaP;
+        int iterLimit = 100;
+        do {
+            double sinLambda = sin(lambda), cosLambda = cos(lambda);
+            sinSigma = sqrt((cosU2 * sinLambda) * (cosU2 * sinLambda) +
+                    (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda) * (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda));
+            cosSigma = sinU1 * sinU2 + cosU1 * cosU2 * cosLambda;
+            sigma = atan2(sinSigma, cosSigma);
+            sinAlpha = cosU1 * cosU2 * sinLambda / sinSigma;
+            cos2Alpha = 1 - sinAlpha * sinAlpha;
+            cos2SigmaM = cosSigma - 2 * sinU1 * sinU2 / cos2Alpha;
+            lambdaP = lambda;
+            lambda = dLon + (1 - cos2Alpha) * f * sinAlpha * (sigma + f * sinSigma * (cos2SigmaM + f * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)));
+        } while (abs(lambda - lambdaP) > 1e-12 && --iterLimit > 0);
+
+        return toDegrees(atan2(sinU1 + sinU2, sqrt((cosU1 + cosU2) * (cosU1 + cosU2) + cos2SigmaM * cos2SigmaM)));
+    }
 
 }

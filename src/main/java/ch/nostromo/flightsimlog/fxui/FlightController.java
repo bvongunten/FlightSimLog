@@ -411,11 +411,8 @@ public class FlightController {
 
     public void closeForm() {
 
-        // Close frame
         Stage stage = (Stage) txtId.getScene().getWindow();
         stage.close();
-
-        FlightSimLogController.getInstance().showLogBook();
 
     }
 }

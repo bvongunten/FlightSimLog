@@ -177,7 +177,7 @@ public class AircraftListController {
             TableRow<Aircraft> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                    FlightSimLogController.getInstance().showAndWait(row.getItem());
+                    FlightSimLogController.getInstance().showAndWaitAircraft(row.getItem());
 
                     setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType, cbShowOutdated.isSelected()));
 

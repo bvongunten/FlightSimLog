@@ -178,7 +178,11 @@ public class LogbookController {
             TableRow<Flight> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                    FlightSimLogController.getInstance().showFlight(row.getItem());
+                    FlightSimLogController.getInstance().showAndWaitFlight(row.getItem());
+
+                    setTable(logbook.getFilteredFlightList(currentFilter));
+
+
                 } else if (event.getButton() == MouseButton.SECONDARY) {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                     alert.setTitle("Confirmation Dialog");

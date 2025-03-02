@@ -37,7 +37,5 @@ module ch.nostromo.flightsimlog {
     opens ch.nostromo.flightsimlog.fxui;
     opens ch.nostromo.flightsimlog.fxui.fxutils;
     opens ch.nostromo.flightsimlog.fxui.dialogs;
-    exports ch.nostromo.flightsimlog.worldtour;
-    opens ch.nostromo.flightsimlog.worldtour;
 
 }

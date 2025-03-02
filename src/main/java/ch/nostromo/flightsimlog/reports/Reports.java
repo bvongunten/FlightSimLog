@@ -87,7 +87,7 @@ public class Reports {
     public static void createCategoriesPage(Logbook logbook) throws IOException {
 
         Breadcrumbs breadcrumbs = new Breadcrumbs();
-        Breadcrumb currentPage = new Breadcrumb("Categories", "index.html");
+        Breadcrumb currentPage = new Breadcrumb("Categories", "index.html", "");
 
         breadcrumbs.breadcrumbs.add(currentPage);
 
@@ -123,7 +123,7 @@ public class Reports {
                     HtmlTableRow row = new HtmlTableRow();
 
                     Breadcrumbs subBreadcrumbs = breadcrumbs.clone();
-                    Breadcrumb flightsBreadCrumb = new Breadcrumb(category.getDescription(), "flights-category-" + category.getId() + ".html");
+                    Breadcrumb flightsBreadCrumb = new Breadcrumb(category.getDescription(), "flights-category-" + category.getId() + ".html", category.getId());
                     subBreadcrumbs.getBreadcrumbs().add(flightsBreadCrumb);
 
                     row.addField(category.getDescription(), colTitle, flightsBreadCrumb.getLink());
@@ -149,7 +149,7 @@ public class Reports {
     public static void createAircraftPage(Logbook logbook) throws IOException {
 
         Breadcrumbs breadcrumbs = new Breadcrumbs();
-        Breadcrumb currentPage = new Breadcrumb("Aircraft", "aircraft.html");
+        Breadcrumb currentPage = new Breadcrumb("Aircraft", "aircraft.html", "");
 
         breadcrumbs.breadcrumbs.add(currentPage);
 
@@ -181,7 +181,7 @@ public class Reports {
             HtmlTableRow row = new HtmlTableRow();
 
             Breadcrumbs subBreadcrumbs = breadcrumbs.clone();
-            Breadcrumb flightsBreadCrumb = new Breadcrumb(aircraft.getManufacturer() + " - " + aircraft.getDescription(), "flights-aircraft-" + aircraft.getId() + ".html");
+            Breadcrumb flightsBreadCrumb = new Breadcrumb(aircraft.getManufacturer() + " - " + aircraft.getDescription(), "flights-aircraft-" + aircraft.getId() + ".html", aircraft.getId());
             subBreadcrumbs.getBreadcrumbs().add(flightsBreadCrumb);
 
 
@@ -227,7 +227,7 @@ public class Reports {
         for (Flight flight : flights) {
 
             Breadcrumbs subBreadcrumbs = breadcrumbs.clone();
-            Breadcrumb flightsBreadCrumb = new Breadcrumb(flight.getDescription(), "flight-" + flight.getId() + ".html");
+            Breadcrumb flightsBreadCrumb = new Breadcrumb(flight.getDescription(), "flight-" + breadcrumbs.breadcrumbs.getLast().getId() + "-" + flight.getId() + ".html", flight.getId());
             subBreadcrumbs.getBreadcrumbs().add(flightsBreadCrumb);
 
 
@@ -258,6 +258,7 @@ public class Reports {
     public static void createFlight(Logbook logbook, Breadcrumbs breadcrumbs, Flight flight) throws IOException {
 
         String template = loadTemplate(TEMPLATE_FLIGHT);
+        String pageLink = breadcrumbs.getBreadcrumbs().getLast().getLink();
 
         template = template.replace("%%TITLE%%", mainNavigation());
         template = template.replace("%%NAVIGATION%%", breadcrumbs.getNavigation());
@@ -301,7 +302,7 @@ public class Reports {
         String geoJson = GeoJson.createGeoJson(flights, true);
         template = template.replace("%%GEOJSON%%", geoJson);
 
-        writeFile(logbook, "flight-" + flight.getId() + ".html", template);
+        writeFile(logbook, pageLink, template);
 
 
     }

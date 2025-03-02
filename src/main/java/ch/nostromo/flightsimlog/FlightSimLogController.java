@@ -173,7 +173,7 @@ public class FlightSimLogController {
         flight.setCategory(logbook.getCategories().get(0));
         flight.setComputerDepartureTime(Calendar.getInstance());
 
-        showFlight(flight);
+        showAndWaitFlight(flight);
     }
 
     public void createAircraft() {
@@ -182,7 +182,7 @@ public class FlightSimLogController {
         aircraft.setId(logbook.getNextAircraftId());
         logbook.getAircraft().add(aircraft);
 
-        showAndWait(aircraft);
+        showAndWaitAircraft(aircraft);
     }
 
     public void deleteFlight(Flight flight) {
@@ -249,7 +249,7 @@ public class FlightSimLogController {
     }
 
 
-    public void showFlight(Flight flight) {
+    public void showAndWaitFlight(Flight flight) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(FlightSimLogController.class.getResource("/fxml/Flight.fxml"));
             Parent parent = fxmlLoader.load();
@@ -258,11 +258,13 @@ public class FlightSimLogController {
             // Edit copy
             controller.setFlight(new Flight(flight));
 
-            primaryStage.setTitle("Flight");
-            primaryStage.setScene(new Scene(parent));
-            primaryStage.show();
+            Stage stage = new Stage();
 
-            primaryStage.setOnCloseRequest(Event::consume);
+            stage.setTitle("Flight");
+            stage.setScene(new Scene(parent));
+            stage.showAndWait();
+
+            stage.setOnCloseRequest(Event::consume);
 
 
         } catch (Exception e) {
@@ -271,7 +273,7 @@ public class FlightSimLogController {
     }
 
 
-    public void showAndWait(Aircraft aircraft) {
+    public void showAndWaitAircraft(Aircraft aircraft) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(FlightSimLogController.class.getResource("/fxml/Aircraft.fxml"));
             Parent parent = fxmlLoader.load();

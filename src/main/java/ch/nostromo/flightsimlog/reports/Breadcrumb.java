@@ -8,5 +8,6 @@ import lombok.Data;
 public class Breadcrumb {
     String title;
     String link;
+    String id;
 
 }

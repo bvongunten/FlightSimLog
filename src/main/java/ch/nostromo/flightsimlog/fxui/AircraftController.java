@@ -38,6 +38,9 @@ public class AircraftController {
     private CheckBox cbToCheck;
 
     @FXML
+    private CheckBox cbOutdated;
+
+    @FXML
     private ChoiceBox<AircraftPropulsion> cbPropulsion;
 
     @FXML
@@ -127,6 +130,7 @@ public class AircraftController {
         cbFavorite.setSelected(aircraft.getFavorite());
         cbMastered.setSelected(aircraft.getMastered());
         cbToCheck.setSelected(aircraft.getToCheck());
+        cbOutdated.setSelected(aircraft.getOutdated());
 
 
 
@@ -158,6 +162,8 @@ public class AircraftController {
         aircraft.setFavorite(cbFavorite.isSelected());
         aircraft.setMastered(cbMastered.isSelected());
         aircraft.setToCheck(cbToCheck.isSelected());
+
+        aircraft.setOutdated(cbOutdated.isSelected());
     }
 
     private void fillSimAircraftTables() {
@@ -229,6 +235,6 @@ public class AircraftController {
 
         FlightSimLogController.getInstance().saveLogbookToFile();
 
-        FlightSimLogController.getInstance().showAircraftList();
+       // FlightSimLogController.getInstance().showAircraftList();
     }
 }

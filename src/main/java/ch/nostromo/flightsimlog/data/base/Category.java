@@ -19,6 +19,9 @@ public class Category {
     @XmlElement
     String description;
 
+    @XmlElement
+    Boolean generateReport = true;
+
     @Override
     public String toString() {
         return description;

@@ -182,7 +182,7 @@ public class FlightSimLogController {
         aircraft.setId(logbook.getNextAircraftId());
         logbook.getAircraft().add(aircraft);
 
-        showAircraft(aircraft);
+        showAndWait(aircraft);
     }
 
     public void deleteFlight(Flight flight) {
@@ -271,7 +271,7 @@ public class FlightSimLogController {
     }
 
 
-    public void showAircraft(Aircraft aircraft) {
+    public void showAndWait(Aircraft aircraft) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(FlightSimLogController.class.getResource("/fxml/Aircraft.fxml"));
             Parent parent = fxmlLoader.load();
@@ -280,11 +280,14 @@ public class FlightSimLogController {
             // Edit copy
             controller.setup(aircraft);
 
-            primaryStage.setTitle("Aircraft");
-            primaryStage.setScene(new Scene(parent));
-            primaryStage.show();
+            Stage stage = new Stage();
 
-            primaryStage.setOnCloseRequest(Event::consume);
+            stage.setTitle("Aircraft");
+            stage.setScene(new Scene(parent));
+            stage.showAndWait();
+
+            stage.setOnCloseRequest(Event::consume);
+
         } catch (Exception e) {
             showError(e);
         }

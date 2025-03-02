@@ -74,13 +74,16 @@ public class Logbook {
         return result;
     }
 
-    public List<Aircraft> getFilteredAircraftList(String filter, AircraftType currentFilterAircraftType, AircraftSeatingType currentFilterSeatingType) {
+    public List<Aircraft> getFilteredAircraftList(String filter, AircraftType currentFilterAircraftType, AircraftSeatingType currentFilterSeatingType, boolean showOutdated) {
         List<Aircraft> result = new ArrayList<>();
         for (Aircraft aircraft : aircraft) {
             if (filter == null || filter.isEmpty() || aircraft.getDescription().toUpperCase().contains(filter.toUpperCase()) || aircraft.getManufacturer().toUpperCase().contains(filter.toUpperCase()) || aircraft.getTags().toUpperCase().contains(filter.toUpperCase()) ) {
                 if (currentFilterAircraftType == null ||aircraft.getAircraftType().equals(currentFilterAircraftType)) {
                     if (currentFilterSeatingType == null || aircraft.getAircraftSeatingType().equals(currentFilterSeatingType)) {
-                        result.add(aircraft);
+                        if (!aircraft.getOutdated() || showOutdated) {
+                            result.add(aircraft);
+                        }
+
                     }
                 }
 
@@ -117,6 +120,18 @@ public class Logbook {
 
         }
         return count;
+    }
+
+    public List<Flight> getFlightsByAircraft(Aircraft aircraft) {
+        List<Flight> result = new ArrayList<>();
+
+        for (Flight flight : getFlights()) {
+            if (aircraft.getSimAircraft().contains(flight.getSimAircraft())) {
+               result.add(flight);
+            }
+
+        }
+        return result;
     }
 
     public boolean isSimAircraftUnlinked(SimAircraft simAircraft) {

@@ -2,6 +2,7 @@ package ch.nostromo.flightsimlog.reports;
 
 import ch.nostromo.flightsimlog.FlightSimLogException;
 import ch.nostromo.flightsimlog.data.Logbook;
+import ch.nostromo.flightsimlog.data.base.Aircraft;
 import ch.nostromo.flightsimlog.data.base.Category;
 import ch.nostromo.flightsimlog.data.base.SimAircraft;
 import ch.nostromo.flightsimlog.data.flight.Flight;
@@ -19,7 +20,10 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Reports {
@@ -64,8 +68,8 @@ public class Reports {
 
         try {
             // List of all categories
-            createMainPage(logbook);
-            createStatsPage(logbook);
+            createCategoriesPage(logbook);
+            createAircraftPage(logbook);
 
         } catch (IOException e) {
             throw new FlightSimLogException("Unable to create statistics with error: " + e.getMessage(), e);
@@ -75,12 +79,22 @@ public class Reports {
     }
 
 
-    public static void createStatsPage(Logbook logbook) throws IOException {
+    private static String mainNavigation() {
+       return "<h3>Logbook - <a href=\"index.html\">Categories</a> / <a href=\"aircraft.html\">Aircraft</a> </h3>";
+
+    }
+
+    public static void createCategoriesPage(Logbook logbook) throws IOException {
+
+        Breadcrumbs breadcrumbs = new Breadcrumbs();
+        Breadcrumb currentPage = new Breadcrumb("Categories", "index.html");
+
+        breadcrumbs.breadcrumbs.add(currentPage);
 
         String template = loadTemplate(TEMPLATE_MAP);
 
-        template = template.replace("%%TITLE%%", "<h3><a href=\"stats.html\">Logbook</a> / Stats </h3>");
-        template = template.replace("%%SUBTITLE%%", "<h4>Aircrafts</h4>");
+        template = template.replace("%%TITLE%%", mainNavigation());
+        template = template.replace("%%NAVIGATION%%", breadcrumbs.getNavigation());
 
         HtmlTable table = new HtmlTable();
 
@@ -100,17 +114,24 @@ public class Reports {
 
         for (Category category : sortedCategories) {
 
-            List<Flight> categoryFlights = logbook.getFilteredFlightList(category);
+            if (category.getGenerateReport()) {
 
-            if (!categoryFlights.isEmpty()) {
+                List<Flight> categoryFlights = logbook.getFilteredFlightList(category);
 
-                HtmlTableRow row = new HtmlTableRow();
+                if (!categoryFlights.isEmpty()) {
 
-                row.addField(category.getDescription(), colTitle, "category-" + category.getId() + ".html");
-                row.addField(categoryFlights.size(), colFlights);
-                table.getRows().add(row);
+                    HtmlTableRow row = new HtmlTableRow();
 
-                createCategory(logbook, category, categoryFlights);
+                    Breadcrumbs subBreadcrumbs = breadcrumbs.clone();
+                    Breadcrumb flightsBreadCrumb = new Breadcrumb(category.getDescription(), "flights-category-" + category.getId() + ".html");
+                    subBreadcrumbs.getBreadcrumbs().add(flightsBreadCrumb);
+
+                    row.addField(category.getDescription(), colTitle, flightsBreadCrumb.getLink());
+                    row.addField(categoryFlights.size(), colFlights);
+                    table.getRows().add(row);
+
+                    createListOfFlights(logbook, subBreadcrumbs, categoryFlights);
+                }
             }
         }
 
@@ -121,48 +142,56 @@ public class Reports {
         template = template.replace("%%GEOJSON%%", geoJson);
 
 
-        writeFile(logbook, "index.html", template);
+        writeFile(logbook, currentPage.getLink(), template);
 
     }
 
+    public static void createAircraftPage(Logbook logbook) throws IOException {
 
-    public static void createMainPage(Logbook logbook) throws IOException {
+        Breadcrumbs breadcrumbs = new Breadcrumbs();
+        Breadcrumb currentPage = new Breadcrumb("Aircraft", "aircraft.html");
+
+        breadcrumbs.breadcrumbs.add(currentPage);
 
         String template = loadTemplate(TEMPLATE_MAP);
 
-        template = template.replace("%%TITLE%%", "<h3>Logbook / <a href=\"stats.html\">Statistics</a></h3>");
-        template = template.replace("%%SUBTITLE%%", "<h4>Categories</h4>");
+        template = template.replace("%%TITLE%%", mainNavigation());
+        template = template.replace("%%NAVIGATION%%", breadcrumbs.getNavigation());
 
         HtmlTable table = new HtmlTable();
 
-        HtmlTableColumn colTitle = new HtmlTableColumn("Category", HtmlTableColumn.HtmlColumnType.STRING);
+        HtmlTableColumn colAircraft = new HtmlTableColumn("Aircraft", HtmlTableColumn.HtmlColumnType.STRING);
+        HtmlTableColumn colType = new HtmlTableColumn("Aircraft Type", HtmlTableColumn.HtmlColumnType.STRING);
         HtmlTableColumn colFlights = new HtmlTableColumn("Flights", HtmlTableColumn.HtmlColumnType.STRING);
 
 
-        List<Category> sortedCategories = logbook.getCategories();
+        List<Aircraft> sortedAircrafts = logbook.getAircraft();
 
-        sortedCategories.sort((o1, o2) -> {
-            int o1Count = logbook.getFilteredFlightList(o1).size();
-            int o2Count = logbook.getFilteredFlightList(o2).size();
+        sortedAircrafts.sort((o1, o2) -> {
+            int o1Count = logbook.getFlightCountByAircraft(o1);
+            int o2Count = logbook.getFlightCountByAircraft(o2);
 
             return Integer.compare(o2Count, o1Count);
         });
 
 
-        for (Category category : sortedCategories) {
+        for (Aircraft aircraft : sortedAircrafts) {
 
-            List<Flight> categoryFlights = logbook.getFilteredFlightList(category);
+            List<Flight> categoryFlights = logbook.getFlightsByAircraft(aircraft);
+            HtmlTableRow row = new HtmlTableRow();
 
-            if (!categoryFlights.isEmpty()) {
+            Breadcrumbs subBreadcrumbs = breadcrumbs.clone();
+            Breadcrumb flightsBreadCrumb = new Breadcrumb(aircraft.getManufacturer() + " - " + aircraft.getDescription(), "flights-aircraft-" + aircraft.getId() + ".html");
+            subBreadcrumbs.getBreadcrumbs().add(flightsBreadCrumb);
 
-                HtmlTableRow row = new HtmlTableRow();
 
-                row.addField(category.getDescription(), colTitle, "category-" + category.getId() + ".html");
-                row.addField(categoryFlights.size(), colFlights);
-                table.getRows().add(row);
+            row.addField(aircraft.getManufacturer() + " - " + aircraft.getDescription(), colAircraft, flightsBreadCrumb.getLink());
+            row.addField(aircraft.getAircraftType(), colType); // Possible type list
 
-                createCategory(logbook, category, categoryFlights);
-            }
+            row.addField(categoryFlights.size(), colFlights);
+            table.getRows().add(row);
+
+            createListOfFlights(logbook, subBreadcrumbs, categoryFlights);
         }
 
 
@@ -172,22 +201,22 @@ public class Reports {
         template = template.replace("%%GEOJSON%%", geoJson);
 
 
-        writeFile(logbook, "index.html", template);
+        writeFile(logbook, currentPage.getLink(), template);
 
     }
 
-    public static void createCategory(Logbook logbook, Category category, List<Flight> flights) throws IOException {
+    public static void createListOfFlights(Logbook logbook, Breadcrumbs breadcrumbs, List<Flight> flights) throws IOException {
 
         String template = loadTemplate(TEMPLATE_MAP);
+        String pageLink = breadcrumbs.getBreadcrumbs().getLast().getLink();
 
-
-        template = template.replace("%%TITLE%%", "<h3><a href=\"index.html\">Logbook</a> - " + category.getDescription() + "</h3>");
-
-        template = template.replace("%%SUBTITLE%%", "<h4>Flights</h4>");
+        template = template.replace("%%TITLE%%", mainNavigation());
+        template = template.replace("%%NAVIGATION%%", breadcrumbs.getNavigation());
 
         HtmlTable table = new HtmlTable();
 
         HtmlTableColumn colDate = new HtmlTableColumn("Date", HtmlTableColumn.HtmlColumnType.CALENDAR);
+        HtmlTableColumn colCategory = new HtmlTableColumn("Category", HtmlTableColumn.HtmlColumnType.STRING);
         HtmlTableColumn colDescription = new HtmlTableColumn("Description", HtmlTableColumn.HtmlColumnType.STRING);
         HtmlTableColumn colDistance = new HtmlTableColumn("Distance", HtmlTableColumn.HtmlColumnType.DISTANCE);
         HtmlTableColumn colDuration = new HtmlTableColumn("Duration", HtmlTableColumn.HtmlColumnType.TIME);
@@ -196,17 +225,24 @@ public class Reports {
         HtmlTableColumn colTo = new HtmlTableColumn("To", HtmlTableColumn.HtmlColumnType.STRING);
 
         for (Flight flight : flights) {
+
+            Breadcrumbs subBreadcrumbs = breadcrumbs.clone();
+            Breadcrumb flightsBreadCrumb = new Breadcrumb(flight.getDescription(), "flight-" + flight.getId() + ".html");
+            subBreadcrumbs.getBreadcrumbs().add(flightsBreadCrumb);
+
+
             HtmlTableRow row = new HtmlTableRow();
             row.addField(flight.getComputerDepartureTime(), colDate);
-            row.addField(flight.getDescription(), colDescription, "flight-" + flight.getId() + ".html");
+            row.addField(flight.getDescription(), colDescription, flightsBreadCrumb.link);
+            row.addField(flight.getDeparturePosition().getIcao(), colFrom);
+            row.addField(flight.getArrivalPosition().getIcao(), colTo);
             row.addField(flight.getCalculatedDistanceInNm(), colDistance);
             row.addField(flight.getCalculatedDurationInSec(), colDuration);
             row.addField(flight.getSimAircraft().getDescription(), colAircraft);
-            row.addField(flight.getDeparturePosition().getIcao(), colFrom);
-            row.addField(flight.getArrivalPosition().getIcao(), colTo);
+            row.addField(flight.getCategory().getDescription(), colCategory);
             table.getRows().add(row);
 
-            createFlight(logbook, category, flight);
+            createFlight(logbook, subBreadcrumbs, flight);
         }
 
         template = template.replace("%%CONTENT%%", table.getHtmlTable());
@@ -214,16 +250,17 @@ public class Reports {
         String geoJson = GeoJson.createGeoJson(flights, true);
         template = template.replace("%%GEOJSON%%", geoJson);
 
-        writeFile(logbook, "category-" + category.getId() + ".html", template);
+        writeFile(logbook, pageLink, template);
 
     }
 
 
-    public static void createFlight(Logbook logbook, Category category, Flight flight) throws IOException {
+    public static void createFlight(Logbook logbook, Breadcrumbs breadcrumbs, Flight flight) throws IOException {
 
         String template = loadTemplate(TEMPLATE_FLIGHT);
 
-        template = template.replace("%%TITLE%%", "<h3><a href=\"category-" + category.getId() + ".html\">" + category.getDescription() + "</a> - " + flight.getDescription() + "</h3>");
+        template = template.replace("%%TITLE%%", mainNavigation());
+        template = template.replace("%%NAVIGATION%%", breadcrumbs.getNavigation());
 
         template = template.replace("%%DESCRIPTION%%", flight.getDescription());
         template = template.replace("%%AIRCRAFT%%", flight.getSimAircraft().getDescription());

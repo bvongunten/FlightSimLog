@@ -23,7 +23,7 @@ public class Aircraft {
     String manufacturer = "";
 
     @XmlElement
-    AircraftType aircraftType = AircraftType.UNDEF;
+    AircraftType aircraftType = AircraftType.EXPERIMENTAL_DIVERS;
 
     @XmlElement
     AircraftPropulsion aircraftPropulsion = AircraftPropulsion.OTHER;
@@ -66,6 +66,9 @@ public class Aircraft {
 
     @XmlElement
     Boolean toCheck = Boolean.TRUE;
+
+    @XmlElement
+    Boolean outdated = Boolean.FALSE;
 
     @XmlElement
     String tags = "";

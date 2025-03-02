@@ -37,6 +37,9 @@ public class AircraftListController {
     @FXML
     ChoiceBox<AircraftSeatingType> cbFilterSeating;
 
+    @FXML
+    CheckBox cbShowOutdated;
+
     Logbook logbook;
 
     String currentFilter = "";
@@ -48,25 +51,26 @@ public class AircraftListController {
 
         txtFilter.textProperty().addListener((obs, old, niu) -> {
            currentFilter = txtFilter.getText();
-           setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType));
+           setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType, cbShowOutdated.isSelected()));
         });
 
         cbFilterType.getItems().add(null);
         cbFilterType.getItems().addAll(AircraftType.values());
         cbFilterType.valueProperty().addListener((observableValue, aircraftType, t1) -> {
             currentFilterAircraftType = t1;
-            setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType));
+            setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType, cbShowOutdated.isSelected()));
         });
 
         cbFilterSeating.getItems().add(null);
         cbFilterSeating.getItems().addAll(AircraftSeatingType.values());
         cbFilterSeating.valueProperty().addListener((observableValue, aircraftType, t1) -> {
             currentFilterSeatingType = t1;
-            setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType));
+            setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType, cbShowOutdated.isSelected()));
         });
 
+        cbShowOutdated.selectedProperty().addListener((observable, oldValue, newValue) -> setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType, cbShowOutdated.isSelected())));
 
-        setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType));
+        setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType, cbShowOutdated.isSelected()));
 
     }
 
@@ -116,9 +120,12 @@ public class AircraftListController {
         range.setCellValueFactory(new PropertyValueFactory<>("range"));
         table.getColumns().add(range);
 
+
         TableColumn<Aircraft, Boolean> autopilot = new TableColumn<>("Autopilot");
         autopilot.setCellValueFactory(new PropertyValueFactory<>("autopilot"));
+        autopilot.setCellFactory(new CheckBoxCellFactory<>());
         table.getColumns().add(autopilot);
+
 
         TableColumn<Aircraft, AircraftSeatingType> steamGauges = new TableColumn<>("Gauges");
         steamGauges.setCellValueFactory(new PropertyValueFactory<>("gauges"));
@@ -170,7 +177,10 @@ public class AircraftListController {
             TableRow<Aircraft> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                    FlightSimLogController.getInstance().showAircraft(row.getItem());
+                    FlightSimLogController.getInstance().showAndWait(row.getItem());
+
+                    setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType, cbShowOutdated.isSelected()));
+
                 } else if (event.getButton() == MouseButton.SECONDARY) {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                     alert.setTitle("Confirmation Dialog");
@@ -180,7 +190,7 @@ public class AircraftListController {
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get() == ButtonType.OK) {
                         FlightSimLogController.getInstance().deleteAircraft(row.getItem());
-                        setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType));
+                        setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType, cbShowOutdated.isSelected()));
                     }
 
                 }

@@ -16,4 +16,15 @@ public class FileTools {
         return files;
     }
 
+    public static File[] getPngsInDirectory(File directory, String prefix) {
+        File[] files = directory.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.toUpperCase().startsWith(prefix.toUpperCase()) && name.toUpperCase().endsWith(".PNG");
+            }
+        });
+
+        return files;
+    }
+
 }

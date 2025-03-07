@@ -22,6 +22,9 @@ public class Category {
     @XmlElement
     Boolean generateReport = true;
 
+    @XmlElement
+    Boolean generateDetailedRoute = true;
+
     @Override
     public String toString() {
         return description;

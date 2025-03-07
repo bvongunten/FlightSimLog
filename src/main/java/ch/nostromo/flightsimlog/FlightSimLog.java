@@ -3,8 +3,6 @@ package ch.nostromo.flightsimlog;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.util.Map;
-
 public class FlightSimLog extends Application {
 
 

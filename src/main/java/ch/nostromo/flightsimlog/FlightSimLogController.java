@@ -22,6 +22,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import lombok.Getter;
@@ -180,6 +181,7 @@ public class FlightSimLogController {
 
         Aircraft aircraft = new Aircraft();
         aircraft.setId(logbook.getNextAircraftId());
+        aircraft.setLogbookFile(logbook.getLogbookFile());
         logbook.getAircraft().add(aircraft);
 
         showAndWaitAircraft(aircraft);
@@ -262,6 +264,7 @@ public class FlightSimLogController {
 
             stage.setTitle("Flight");
             stage.setScene(new Scene(parent));
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
             stage.setOnCloseRequest(Event::consume);
@@ -280,15 +283,20 @@ public class FlightSimLogController {
             AircraftController controller = fxmlLoader.getController();
 
             // Edit copy
+            aircraft.setLogbookFile(logbook.getLogbookFile());
             controller.setup(aircraft);
 
             Stage stage = new Stage();
 
             stage.setTitle("Aircraft");
             stage.setScene(new Scene(parent));
+            stage.initModality(Modality.APPLICATION_MODAL);
+
             stage.showAndWait();
 
             stage.setOnCloseRequest(Event::consume);
+
+
 
         } catch (Exception e) {
             showError(e);

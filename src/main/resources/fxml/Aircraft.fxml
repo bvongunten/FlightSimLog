@@ -4,53 +4,28 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="841.0" prefWidth="1157.0" xmlns="http://javafx.com/javafx/17.0.3>" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.nostromo.flightsimlog.fxui.AircraftController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="842.0" prefWidth="1186.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.nostromo.flightsimlog.fxui.AircraftController">
    <children>
       <Label layoutX="33.0" layoutY="29.0" prefHeight="17.0" prefWidth="118.0" text="Manufacturer" />
       <Label layoutX="415.0" layoutY="29.0" prefHeight="17.0" prefWidth="118.0" text="Aircraft" />
       <Label layoutX="986.0" layoutY="29.0" prefHeight="17.0" prefWidth="37.0" text="ID" />
       <Label layoutX="33.0" layoutY="66.0" prefHeight="17.0" prefWidth="118.0" text="Aircraft type" />
-      <Label layoutX="33.0" layoutY="136.0" prefHeight="17.0" prefWidth="118.0" text="Propulsion" />
-      <Label layoutX="415.0" layoutY="136.0" prefHeight="17.0" prefWidth="118.0" text="Engines" />
-      <Label layoutX="33.0" layoutY="175.0" prefHeight="17.0" prefWidth="118.0" text="Seating" />
-      <Label layoutX="33.0" layoutY="243.0" prefHeight="17.0" prefWidth="118.0" text="Speed" />
-      <Label layoutX="181.0" layoutY="243.0" prefHeight="17.0" prefWidth="118.0" text="Altitude" />
-      <Label layoutX="348.0" layoutY="243.0" prefHeight="17.0" prefWidth="118.0" text="Range" />
-      <Label layoutX="582.0" layoutY="136.0" prefHeight="17.0" prefWidth="118.0" text="Gauges" />
-      <Label layoutX="33.0" layoutY="317.0" prefHeight="17.0" prefWidth="118.0" text="Tags &amp; Remarks" />
       <Label layoutX="986.0" layoutY="66.0" prefHeight="17.0" prefWidth="37.0" text="Flights" />
 
       <TextField fx:id="txtManufacturer" layoutX="159.0" layoutY="25.0" prefHeight="25.0" prefWidth="231.0" />
       <TextField fx:id="txtDescription" layoutX="541.0" layoutY="25.0" prefHeight="25.0" prefWidth="364.0" />
       <ChoiceBox fx:id="cbAircraftType" layoutX="159.0" layoutY="62.0" prefHeight="25.0" prefWidth="231.0" />
 
-      <TextField fx:id="txtId" disable="true" editable="false" layoutX="1045.0" layoutY="25.0" prefHeight="25.0" prefWidth="85.0" />
+      <TextField fx:id="txtId" layoutX="1045.0" layoutY="25.0" prefHeight="25.0" prefWidth="85.0" />
       <TextField fx:id="txtFlightCount" disable="true" editable="false" layoutX="1045.0" layoutY="62.0" prefHeight="25.0" prefWidth="85.0" />
-
-      <ChoiceBox fx:id="cbPropulsion" layoutX="159.0" layoutY="132.0" prefHeight="25.0" prefWidth="231.0" />
-      <TextField fx:id="txtEngines" layoutX="487.0" layoutY="132.0" prefHeight="25.0" prefWidth="64.0" />
-
-      <ChoiceBox fx:id="cbGauges" layoutX="674.0" layoutY="132.0" prefHeight="25.0" prefWidth="231.0" />
-      <CheckBox fx:id="cbAutopilot" layoutX="934.0" layoutY="136.0" mnemonicParsing="false" text="Autopilot" />
-
-      <ChoiceBox fx:id="cbSeating" layoutX="159.0" layoutY="171.0" prefHeight="25.0" prefWidth="231.0" />
-
-      <CheckBox fx:id="cbGear" layoutX="586.0" layoutY="175.0" mnemonicParsing="false" text="Gear" />
-      <CheckBox fx:id="cbSkis" layoutX="679.0" layoutY="176.0" mnemonicParsing="false" text="Skis" />
-      <CheckBox fx:id="cbFloats" layoutX="766.0" layoutY="176.0" mnemonicParsing="false" text="Floats" />
-
-      <TextField fx:id="txtSpeed" layoutX="93.0" layoutY="239.0" prefHeight="25.0" prefWidth="64.0" />
-      <TextField fx:id="txtAltitude" layoutX="255.0" layoutY="239.0" prefHeight="25.0" prefWidth="64.0" />
-      <TextField fx:id="txtRange" layoutX="415.0" layoutY="239.0" prefHeight="25.0" prefWidth="64.0" />
-
-      <TextField fx:id="txtTags" layoutX="155.0" layoutY="313.0" prefHeight="25.0" prefWidth="970.0" />
-      <TextArea fx:id="txtRemarks" layoutX="31.0" layoutY="345.0" prefHeight="200.0" prefWidth="1096.0" />
 
 
       <Button layoutX="1036.0" layoutY="786.0" mnemonicParsing="false" onAction="#onClose" prefHeight="25.0" prefWidth="91.0" text="Close" />
@@ -58,14 +33,55 @@
       <CheckBox fx:id="cbMastered" layoutX="131.0" layoutY="790.0" mnemonicParsing="false" text="Mastered" />
       <CheckBox fx:id="cbToCheck" layoutX="228.0" layoutY="790.0" mnemonicParsing="false" text="To check" />
       <CheckBox fx:id="cbOutdated" layoutX="326.0" layoutY="790.0" mnemonicParsing="false" text="Outdated" />
-
-      <Line endX="995.0" layoutX="134.0" layoutY="112.0" startX="-100.0" />
-      <Line endX="995.0" layoutX="134.0" layoutY="213.0" startX="-100.0" />
-      <Line endX="995.0" layoutX="132.0" layoutY="744.0" startX="-100.0" />
-      <Line endX="995.0" layoutX="134.0" layoutY="569.0" startX="-100.0" />
-      <Line endX="995.0" layoutX="134.0" layoutY="291.0" startX="-100.0" />
-      <BorderPane fx:id="paneSimAircraft" layoutX="34.0" layoutY="586.0" prefHeight="140.0" prefWidth="530.0" />
-      <BorderPane fx:id="paneUnlinkedAircraft" layoutX="596.0" layoutY="586.0" prefHeight="140.0" prefWidth="530.0" />
+      <TabPane layoutX="22.0" layoutY="112.0" prefHeight="640.0" prefWidth="1100.0" tabClosingPolicy="UNAVAILABLE">
+         <tabs>
+            <Tab text="Information">
+               <content>
+                  <Pane prefHeight="608.0" prefWidth="1180.0">
+                     <children>
+                        <BorderPane fx:id="paneSimAircraft" layoutX="14.0" layoutY="454.0" prefHeight="140.0" prefWidth="530.0" />
+                        <BorderPane fx:id="paneUnlinkedAircraft" layoutX="578.0" layoutY="454.0" prefHeight="140.0" prefWidth="530.0" />
+                        <TextArea fx:id="txtRemarks" layoutX="17.0" layoutY="214.0" prefHeight="200.0" prefWidth="1096.0" />
+                        <Label layoutX="18.0" layoutY="180.0" prefHeight="17.0" prefWidth="118.0" text="Tags &amp; Remarks" />
+                  
+                        <TextField fx:id="txtTags" layoutX="143.0" layoutY="176.0" prefHeight="25.0" prefWidth="970.0" />
+                        <Label layoutX="16.0" layoutY="130.0" prefHeight="17.0" prefWidth="118.0" text="Speed" />
+                        <Label layoutX="230.0" layoutY="130.0" prefHeight="17.0" prefWidth="118.0" text="Altitude" />
+                        <Label layoutX="397.0" layoutY="130.0" prefHeight="17.0" prefWidth="118.0" text="Range" />
+                  
+                        <TextField fx:id="txtSpeed" layoutX="142.0" layoutY="126.0" prefHeight="25.0" prefWidth="64.0" />
+                        <TextField fx:id="txtAltitude" layoutX="304.0" layoutY="126.0" prefHeight="25.0" prefWidth="64.0" />
+                        <TextField fx:id="txtRange" layoutX="464.0" layoutY="126.0" prefHeight="25.0" prefWidth="64.0" />
+                        <Label layoutX="16.0" layoutY="31.0" prefHeight="17.0" prefWidth="118.0" text="Propulsion" />
+                        <Label layoutX="398.0" layoutY="31.0" prefHeight="17.0" prefWidth="118.0" text="Engines" />
+                        <Label layoutX="16.0" layoutY="70.0" prefHeight="17.0" prefWidth="118.0" text="Seating" />
+                        <Label layoutX="565.0" layoutY="31.0" prefHeight="17.0" prefWidth="118.0" text="Gauges" />
+                  
+                        <ChoiceBox fx:id="cbPropulsion" layoutX="142.0" layoutY="27.0" prefHeight="25.0" prefWidth="231.0" />
+                        <TextField fx:id="txtEngines" layoutX="470.0" layoutY="27.0" prefHeight="25.0" prefWidth="64.0" />
+                  
+                        <ChoiceBox fx:id="cbGauges" layoutX="657.0" layoutY="27.0" prefHeight="25.0" prefWidth="231.0" />
+                        <CheckBox fx:id="cbAutopilot" layoutX="917.0" layoutY="31.0" mnemonicParsing="false" text="Autopilot" />
+                  
+                        <ChoiceBox fx:id="cbSeating" layoutX="142.0" layoutY="66.0" prefHeight="25.0" prefWidth="231.0" />
+                  
+                        <CheckBox fx:id="cbGear" layoutX="569.0" layoutY="70.0" mnemonicParsing="false" text="Gear" />
+                        <CheckBox fx:id="cbSkis" layoutX="662.0" layoutY="71.0" mnemonicParsing="false" text="Skis" />
+                        <CheckBox fx:id="cbFloats" layoutX="749.0" layoutY="71.0" mnemonicParsing="false" text="Floats" />
+                        <Line endX="995.0" layoutX="117.0" layoutY="166.0" startX="-100.0" />
+                        <Line endX="995.0" layoutX="117.0" layoutY="114.0" startX="-100.0" />
+                        <Line endX="995.0" layoutX="117.0" layoutY="434.0" startX="-100.0" />
+                     </children>
+                  </Pane>
+               </content>
+            </Tab>
+            <Tab fx:id="imagesTab" text="Images">
+               <content>
+                  <BorderPane fx:id="imagesPane" prefHeight="200.0" prefWidth="200.0" />
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
 
 
    </children>

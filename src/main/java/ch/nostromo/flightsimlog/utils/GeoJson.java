@@ -18,11 +18,11 @@ import static java.lang.Math.*;
 
 public class GeoJson {
 
-    public static String createGeoJson(Flight flight, boolean includePath) {
-        return createGeoJson(new ArrayList<>(List.of(flight)), includePath);
+    public static String createGeoJson(Flight flight, boolean includePath, boolean detailPath) {
+        return createGeoJson(new ArrayList<>(List.of(flight)), includePath, detailPath);
     }
 
-    public static String createGeoJson(List<Flight> flights, boolean includePath) {
+    public static String createGeoJson(List<Flight> flights, boolean includePath, boolean detailPath) {
         FeatureCollection featureCollection = new FeatureCollection();
 
         Set<String> visitedIcaos = new HashSet<>();
@@ -32,10 +32,11 @@ public class GeoJson {
             addPosition(featureCollection, visitedIcaos, flight.getArrivalPosition());
 
             if (includePath) {
-                addPath(featureCollection, flight);
+                addPath(featureCollection, flight, detailPath);
             }
 
         }
+
 
         try {
             return new ObjectMapper().writeValueAsString(featureCollection);
@@ -75,10 +76,10 @@ public class GeoJson {
 
     }
 
-    private static void addPath(FeatureCollection featureCollection, Flight flight) {
+    private static void addPath(FeatureCollection featureCollection, Flight flight, boolean detailPath) {
         List<Coordinates> coordinates = new ArrayList<>();
 
-        if (flight.getSimulationData().getMeasurements().size() > 1) {
+        if (flight.getSimulationData().getMeasurements().size() > 1 && detailPath) {
             coordinates.addAll(flight.getSimulationData().getMeasurements());
         } else {
             coordinates.add(flight.getDeparturePosition());
@@ -86,12 +87,12 @@ public class GeoJson {
         }
         Coordinates lastCoordinates = null;
 
+        Feature mainLineFeature = new Feature();
+        LineString lineString = new LineString();
 
         for (Coordinates coordinate : coordinates) {
 
             if (lastCoordinates != null) {
-                Feature mainLineFeature = new Feature();
-                LineString mainLineString = new LineString();
 
                 double lonDifference = Math.abs(coordinate.getCoordLon() - lastCoordinates.getCoordLon());
 
@@ -99,47 +100,60 @@ public class GeoJson {
 
                     if (lastCoordinates.getCoordLon() > 0 && coordinate.getCoordLon() < 0) {
                         // Crossing from + to -
+                        Feature firstLineFeature = new Feature();
                         LineString firstLine = new LineString();
+
                         firstLine.getCoordinates().add(new LngLatAlt(lastCoordinates.getCoordLon(), lastCoordinates.getCoordLat()));
                         firstLine.getCoordinates().add(new LngLatAlt(179.9, vincentyLat(lastCoordinates.getCoordLat(), lastCoordinates.getCoordLon(), 179.9, coordinate.getCoordLat(), coordinate.getCoordLon())));
-                        mainLineFeature.setGeometry(firstLine);
-                        featureCollection.add(mainLineFeature);
+
+                        firstLineFeature.setGeometry(firstLine);
+                        featureCollection.add(firstLineFeature);
 
                         Feature secondLineFeature = new Feature();
                         LineString secondLine = new LineString();
+
                         secondLine.getCoordinates().add(new LngLatAlt(-179.9, vincentyLat(lastCoordinates.getCoordLat(), lastCoordinates.getCoordLon(), -179.9, coordinate.getCoordLat(), coordinate.getCoordLon())));
                         secondLine.getCoordinates().add(new LngLatAlt(coordinate.getCoordLon(), coordinate.getCoordLat()));
+
                         secondLineFeature.setGeometry(secondLine);
                         featureCollection.add(secondLineFeature);
 
                     } else if (lastCoordinates.getCoordLon() < 0 && coordinate.getCoordLon() > 0) {
                         // Crossing from - to +
+                        Feature firstLineFeature = new Feature();
                         LineString firstLine = new LineString();
+
                         firstLine.getCoordinates().add(new LngLatAlt(lastCoordinates.getCoordLon(), lastCoordinates.getCoordLat()));
                         firstLine.getCoordinates().add(new LngLatAlt(-179.9, vincentyLat(lastCoordinates.getCoordLat(), lastCoordinates.getCoordLon(), -179.9, coordinate.getCoordLat(), coordinate.getCoordLon())));
-                        mainLineFeature.setGeometry(firstLine);
-                        featureCollection.add(mainLineFeature);
+
+                        firstLineFeature.setGeometry(firstLine);
+                        featureCollection.add(firstLineFeature);
 
                         Feature secondLineFeature = new Feature();
                         LineString secondLine = new LineString();
+
                         secondLine.getCoordinates().add(new LngLatAlt(179.9, vincentyLat(lastCoordinates.getCoordLat(), lastCoordinates.getCoordLon(), 179.9, coordinate.getCoordLat(), coordinate.getCoordLon())));
                         secondLine.getCoordinates().add(new LngLatAlt(coordinate.getCoordLon(), coordinate.getCoordLat()));
+
                         secondLineFeature.setGeometry(secondLine);
                         featureCollection.add(secondLineFeature);
                     }
 
                 } else {
-                    // If no crossing, just create one line
-                    mainLineString.getCoordinates().add(new LngLatAlt(lastCoordinates.getCoordLon(), lastCoordinates.getCoordLat()));
-                    mainLineString.getCoordinates().add(new LngLatAlt(coordinate.getCoordLon(), coordinate.getCoordLat()));
-                    mainLineFeature.setGeometry(mainLineString);
-                    featureCollection.add(mainLineFeature);
+
+                    lineString.getCoordinates().add(new LngLatAlt(lastCoordinates.getCoordLon(), lastCoordinates.getCoordLat()));
+                    lineString.getCoordinates().add(new LngLatAlt(coordinate.getCoordLon(), coordinate.getCoordLat()));
+
                 }
             }
 
             lastCoordinates = coordinate;
 
         }
+
+        mainLineFeature.setGeometry(lineString);
+        featureCollection.add(mainLineFeature);
+
     }
 
     /**

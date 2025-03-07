@@ -1,8 +1,11 @@
 package ch.nostromo.flightsimlog.data;
 
-import ch.nostromo.flightsimlog.data.base.*;
-import ch.nostromo.flightsimlog.data.flight.FlightSim;
+import ch.nostromo.flightsimlog.data.base.Aircraft;
+import ch.nostromo.flightsimlog.data.base.AircraftType;
+import ch.nostromo.flightsimlog.data.base.Category;
+import ch.nostromo.flightsimlog.data.base.SimAircraft;
 import ch.nostromo.flightsimlog.data.flight.Flight;
+import ch.nostromo.flightsimlog.data.flight.FlightSim;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +15,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 
 @Getter
@@ -74,22 +78,19 @@ public class Logbook {
         return result;
     }
 
-    public List<Aircraft> getFilteredAircraftList(String filter, AircraftType currentFilterAircraftType, AircraftSeatingType currentFilterSeatingType, boolean showOutdated) {
+    public List<Aircraft> getFilteredAircraftList(String filter, AircraftType currentFilterAircraftType, boolean showOutdated) {
         List<Aircraft> result = new ArrayList<>();
         for (Aircraft aircraft : aircraft) {
-            if (filter == null || filter.isEmpty() || aircraft.getDescription().toUpperCase().contains(filter.toUpperCase()) || aircraft.getManufacturer().toUpperCase().contains(filter.toUpperCase()) || aircraft.getTags().toUpperCase().contains(filter.toUpperCase()) ) {
-                if (currentFilterAircraftType == null ||aircraft.getAircraftType().equals(currentFilterAircraftType)) {
-                    if (currentFilterSeatingType == null || aircraft.getAircraftSeatingType().equals(currentFilterSeatingType)) {
-                        if (!aircraft.getOutdated() || showOutdated) {
-                            result.add(aircraft);
-                        }
-
+            if (filter == null || filter.isEmpty() || aircraft.getDescription().toUpperCase().contains(filter.toUpperCase()) || aircraft.getManufacturer().toUpperCase().contains(filter.toUpperCase()) || aircraft.getTags().toUpperCase().contains(filter.toUpperCase())) {
+                if (currentFilterAircraftType == null || aircraft.getAircraftType().equals(currentFilterAircraftType)) {
+                    if (!aircraft.getOutdated() || showOutdated) {
+                        result.add(aircraft);
                     }
+
                 }
 
             }
         }
-
 
 
         result.sort(Comparator.comparing(Aircraft::getDescription));
@@ -120,18 +121,6 @@ public class Logbook {
 
         }
         return count;
-    }
-
-    public List<Flight> getFlightsByAircraft(Aircraft aircraft) {
-        List<Flight> result = new ArrayList<>();
-
-        for (Flight flight : getFlights()) {
-            if (aircraft.getSimAircraft().contains(flight.getSimAircraft())) {
-               result.add(flight);
-            }
-
-        }
-        return result;
     }
 
     public boolean isSimAircraftUnlinked(SimAircraft simAircraft) {
@@ -184,4 +173,59 @@ public class Logbook {
 
         return false;
     }
+
+    public List<Flight> getFlightsForReport() {
+
+        List<Flight> result = new ArrayList<>();
+        for (Flight flight : flights) {
+            if (flight.getCategory().getGenerateReport()) {
+                result.add(flight);
+            }
+        }
+        return result;
+    }
+
+    public int getFlightCountByAircraftForReport(Aircraft aircraft) {
+        int count = 0;
+        for (Flight flight : getFlights()) {
+            if (flight.getCategory().getGenerateReport() && aircraft.getSimAircraft().contains(flight.getSimAircraft())) {
+                count++;
+            }
+
+        }
+        return count;
+    }
+
+    public List<Flight> getFlightsByAircraftForReport(Aircraft aircraft) {
+        List<Flight> result = new ArrayList<>();
+
+        for (Flight flight : getFlights()) {
+            if (flight.getCategory().getGenerateReport() && aircraft.getSimAircraft().contains(flight.getSimAircraft())) {
+                result.add(flight);
+            }
+
+        }
+        return result;
+    }
+
+    public Category getAutotrackerCategory() {
+        for (Category category : categories) {
+            if (category.getId().equals("C-1")) {
+                return category;
+            }
+        }
+        throw new IllegalArgumentException("Auto tracker category not found");
+    }
+
+    public Aircraft getAircraftBySimAircraft(SimAircraft simAircraft) {
+        for (Aircraft aircraft : aircraft) {
+            for (SimAircraft linkedAircraft : aircraft.getSimAircraft()) {
+                if (linkedAircraft.getId().equals(simAircraft.getId())) {
+                    return aircraft;
+                }
+            }
+        }
+        throw new IllegalArgumentException("Aircraft not found for simAircraft: " + simAircraft.getDescription());
+    }
+
 }

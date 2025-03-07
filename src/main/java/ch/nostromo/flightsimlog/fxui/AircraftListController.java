@@ -35,42 +35,32 @@ public class AircraftListController {
     ChoiceBox<AircraftType> cbFilterType;
 
     @FXML
-    ChoiceBox<AircraftSeatingType> cbFilterSeating;
-
-    @FXML
     CheckBox cbShowOutdated;
 
     Logbook logbook;
 
     String currentFilter = "";
     AircraftType currentFilterAircraftType;
-    AircraftSeatingType currentFilterSeatingType;
 
     public void setup(Logbook logbook) {
         this.logbook = logbook;
 
         txtFilter.textProperty().addListener((obs, old, niu) -> {
            currentFilter = txtFilter.getText();
-           setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType, cbShowOutdated.isSelected()));
+           setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, cbShowOutdated.isSelected()));
         });
 
         cbFilterType.getItems().add(null);
         cbFilterType.getItems().addAll(AircraftType.values());
         cbFilterType.valueProperty().addListener((observableValue, aircraftType, t1) -> {
             currentFilterAircraftType = t1;
-            setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType, cbShowOutdated.isSelected()));
+            setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, cbShowOutdated.isSelected()));
         });
 
-        cbFilterSeating.getItems().add(null);
-        cbFilterSeating.getItems().addAll(AircraftSeatingType.values());
-        cbFilterSeating.valueProperty().addListener((observableValue, aircraftType, t1) -> {
-            currentFilterSeatingType = t1;
-            setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType, cbShowOutdated.isSelected()));
-        });
 
-        cbShowOutdated.selectedProperty().addListener((observable, oldValue, newValue) -> setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType, cbShowOutdated.isSelected())));
+        cbShowOutdated.selectedProperty().addListener((observable, oldValue, newValue) -> setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType,  cbShowOutdated.isSelected())));
 
-        setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType, cbShowOutdated.isSelected()));
+        setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, cbShowOutdated.isSelected()));
 
     }
 
@@ -179,7 +169,7 @@ public class AircraftListController {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     FlightSimLogController.getInstance().showAndWaitAircraft(row.getItem());
 
-                    setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType, cbShowOutdated.isSelected()));
+                    setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, cbShowOutdated.isSelected()));
 
                 } else if (event.getButton() == MouseButton.SECONDARY) {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -190,7 +180,7 @@ public class AircraftListController {
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get() == ButtonType.OK) {
                         FlightSimLogController.getInstance().deleteAircraft(row.getItem());
-                        setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, currentFilterSeatingType, cbShowOutdated.isSelected()));
+                        setTable(logbook.getFilteredAircraftList(currentFilter, currentFilterAircraftType, cbShowOutdated.isSelected()));
                     }
 
                 }

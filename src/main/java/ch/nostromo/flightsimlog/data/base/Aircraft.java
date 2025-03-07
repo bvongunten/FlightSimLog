@@ -1,9 +1,11 @@
 package ch.nostromo.flightsimlog.data.base;
 
+import ch.nostromo.flightsimlog.utils.FileTools;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,9 +83,29 @@ public class Aircraft {
     List<SimAircraft> simAircraft = new ArrayList<>();
 
 
+    @XmlTransient
+    File logbookFile;
+
+
+
     @Override
     public String toString() {
         return description;
+    }
+
+    public File getAircraftImagesPath() {
+        return new File (getLogbookFile().getParentFile().getAbsolutePath() + "/Screenshots/Aircraft" );
+    }
+
+
+    public int getImagesCount() {
+        File dir = getAircraftImagesPath();
+
+        if (!dir.exists()) {
+            return 0;
+        }
+
+        return FileTools.getPngsInDirectory(dir, this.getId()).length;
     }
 
 

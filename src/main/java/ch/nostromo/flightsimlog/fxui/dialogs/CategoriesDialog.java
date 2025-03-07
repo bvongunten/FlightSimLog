@@ -114,9 +114,9 @@ public class CategoriesDialog extends Dialog<Void> {
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
                 if (item == null) {
-                    return new Category(idField.getText(), descriptionField.getText(), true);
+                    return new Category(idField.getText(), descriptionField.getText(), true, true);
                 } else {
-                    return new Category(item.getId(), descriptionField.getText(), true); // Preserve the existing ID
+                    return new Category(item.getId(), descriptionField.getText(), true, true); // Preserve the existing ID
                 }
             }
             return null;

@@ -220,13 +220,13 @@ public class LogbookController {
 
     @FXML
     void onGeoJsonPath(ActionEvent event) {
-        String geoJson = GeoJson.createGeoJson(logbook.getFilteredFlightList(currentFilter), true);
+        String geoJson = GeoJson.createGeoJson(logbook.getFilteredFlightList(currentFilter), true, true);
         new TextMessageDialog((Stage) btnGeoJsonPath.getScene().getWindow(), "GeoJson", geoJson).showAndWait();
     }
 
     @FXML
     void onGeoJsonAirport(ActionEvent event) {
-        String geoJson = GeoJson.createGeoJson(logbook.getFilteredFlightList(currentFilter), false);
+        String geoJson = GeoJson.createGeoJson(logbook.getFilteredFlightList(currentFilter), false, false);
         new TextMessageDialog((Stage) btnGeoJsonAirport.getScene().getWindow(), "GeoJson", geoJson).showAndWait();
     }
 

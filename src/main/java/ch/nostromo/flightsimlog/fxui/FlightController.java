@@ -330,7 +330,7 @@ public class FlightController {
 
     @FXML
     void onGetGeoJson(ActionEvent event) throws UnsupportedEncodingException {
-        String geoJson = GeoJson.createGeoJson(flight, true);
+        String geoJson = GeoJson.createGeoJson(flight, true,true);
         ClipboardTools.pasteToClipboard(geoJson);
         FlightSimLogController.getInstance().showWarning("GeoJson copied to clipboard");
     }

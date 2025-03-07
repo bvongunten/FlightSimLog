@@ -32,36 +32,6 @@ public class Reports {
     private static final String TEMPLATE_MAP = "template_map.html";
     private static final String TEMPLATE_FLIGHT = "template_flight.html";
 
-    public static void createStatistics(List<Flight> flights) {
-
-        // Get all planes in those flights
-        Map<SimAircraft, AircraftStatistics> aircraftStatisticsMap = new HashMap<>();
-
-        for (Flight flight : flights) {
-            if (!aircraftStatisticsMap.containsKey(flight.getSimAircraft())) {
-                aircraftStatisticsMap.put(flight.getSimAircraft(), new AircraftStatistics());
-            }
-
-            AircraftStatistics statistics = aircraftStatisticsMap.get(flight.getSimAircraft());
-            statistics.simAircraft = flight.getSimAircraft();
-            statistics.flightCount++;
-            statistics.totalDistance += flight.getCalculatedDistanceInNm();
-            statistics.totalSeconds += flight.getCalculatedDurationInSec();
-        }
-
-        List<AircraftStatistics> aircraftStatisticsList = new ArrayList<>(aircraftStatisticsMap.values());
-
-        aircraftStatisticsList.sort((o1, o2) -> Integer.compare(o2.getFlightCount(), o1.getFlightCount()));
-
-        StringBuilder sb = new StringBuilder();
-        for (AircraftStatistics statistics : aircraftStatisticsList) {
-            sb.append(statistics.getSimAircraft() + ", " + statistics.getFlightCount() + ", " + Math.round(statistics.getTotalDistance()) + ", " + Math.round(statistics.getTotalSeconds()) + System.lineSeparator());
-        }
-
-        new TextMessageDialog(null, "Statistics", sb.toString()).showAndWait();
-
-
-    }
 
 
     public static void createReports(Logbook logbook) {
@@ -130,7 +100,7 @@ public class Reports {
                     row.addField(categoryFlights.size(), colFlights);
                     table.getRows().add(row);
 
-                    createListOfFlights(logbook, subBreadcrumbs, categoryFlights);
+                    createListOfFlights(logbook, subBreadcrumbs, categoryFlights, category.getGenerateDetailedRoute());
                 }
             }
         }
@@ -138,7 +108,7 @@ public class Reports {
 
         template = template.replace("%%CONTENT%%", table.getHtmlTable());
 
-        String geoJson = GeoJson.createGeoJson(logbook.getFlights(), false);
+        String geoJson = GeoJson.createGeoJson(logbook.getFlightsForReport(), false, false);
         template = template.replace("%%GEOJSON%%", geoJson);
 
 
@@ -168,8 +138,8 @@ public class Reports {
         List<Aircraft> sortedAircrafts = logbook.getAircraft();
 
         sortedAircrafts.sort((o1, o2) -> {
-            int o1Count = logbook.getFlightCountByAircraft(o1);
-            int o2Count = logbook.getFlightCountByAircraft(o2);
+            int o1Count = logbook.getFlightCountByAircraftForReport(o1);
+            int o2Count = logbook.getFlightCountByAircraftForReport(o2);
 
             return Integer.compare(o2Count, o1Count);
         });
@@ -177,7 +147,7 @@ public class Reports {
 
         for (Aircraft aircraft : sortedAircrafts) {
 
-            List<Flight> categoryFlights = logbook.getFlightsByAircraft(aircraft);
+            List<Flight> categoryFlights = logbook.getFlightsByAircraftForReport(aircraft);
             HtmlTableRow row = new HtmlTableRow();
 
             Breadcrumbs subBreadcrumbs = breadcrumbs.clone();
@@ -191,13 +161,13 @@ public class Reports {
             row.addField(categoryFlights.size(), colFlights);
             table.getRows().add(row);
 
-            createListOfFlights(logbook, subBreadcrumbs, categoryFlights);
+            createListOfFlights(logbook, subBreadcrumbs, categoryFlights, true);
         }
 
 
         template = template.replace("%%CONTENT%%", table.getHtmlTable());
 
-        String geoJson = GeoJson.createGeoJson(logbook.getFlights(), false);
+        String geoJson = GeoJson.createGeoJson(logbook.getFlightsForReport(), false, false);
         template = template.replace("%%GEOJSON%%", geoJson);
 
 
@@ -205,7 +175,7 @@ public class Reports {
 
     }
 
-    public static void createListOfFlights(Logbook logbook, Breadcrumbs breadcrumbs, List<Flight> flights) throws IOException {
+    public static void createListOfFlights(Logbook logbook, Breadcrumbs breadcrumbs, List<Flight> flights, boolean detailedFlightPath) throws IOException {
 
         String template = loadTemplate(TEMPLATE_MAP);
         String pageLink = breadcrumbs.getBreadcrumbs().getLast().getLink();
@@ -238,7 +208,7 @@ public class Reports {
             row.addField(flight.getArrivalPosition().getIcao(), colTo);
             row.addField(flight.getCalculatedDistanceInNm(), colDistance);
             row.addField(flight.getCalculatedDurationInSec(), colDuration);
-            row.addField(flight.getSimAircraft().getDescription(), colAircraft);
+            row.addField(logbook.getAircraftBySimAircraft(flight.getSimAircraft()).getManufacturer() + " - " + logbook.getAircraftBySimAircraft(flight.getSimAircraft()).getDescription(), colAircraft);
             row.addField(flight.getCategory().getDescription(), colCategory);
             table.getRows().add(row);
 
@@ -247,7 +217,7 @@ public class Reports {
 
         template = template.replace("%%CONTENT%%", table.getHtmlTable());
 
-        String geoJson = GeoJson.createGeoJson(flights, true);
+        String geoJson = GeoJson.createGeoJson(flights, true, detailedFlightPath);
         template = template.replace("%%GEOJSON%%", geoJson);
 
         writeFile(logbook, pageLink, template);
@@ -299,7 +269,7 @@ public class Reports {
 
         List<Flight> flights = new ArrayList<>();
         flights.add(flight);
-        String geoJson = GeoJson.createGeoJson(flights, true);
+        String geoJson = GeoJson.createGeoJson(flights, true, true);
         template = template.replace("%%GEOJSON%%", geoJson);
 
         writeFile(logbook, pageLink, template);

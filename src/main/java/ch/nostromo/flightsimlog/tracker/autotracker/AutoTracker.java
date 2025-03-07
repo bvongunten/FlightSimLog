@@ -13,7 +13,7 @@ import ch.nostromo.flightsimlog.data.flight.SimulationData;
 import ch.nostromo.flightsimlog.tracker.TrackerData;
 import ch.nostromo.flightsimlog.tracker.TrackerListener;
 import ch.nostromo.flightsimlog.tracker.simconnect.SimConnectTracker;
-import ch.nostromo.flightsimlog.utils.ScreenshotGrabber;
+import ch.nostromo.flightsimlog.utils.FlightScreenshotGrabber;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -35,7 +35,7 @@ public class AutoTracker implements TrackerListener {
     private int lastSimStart;
     private int lastSimStop;
 
-    ScreenshotGrabber screenshotGrabber;
+    FlightScreenshotGrabber flightScreenshotGrabber;
 
     public AutoTracker(AutoTrackerListener listener) {
         this.listener = listener;
@@ -49,9 +49,9 @@ public class AutoTracker implements TrackerListener {
     public void stopTracker() {
         simConnectTracker.stopTracker();
 
-        if (screenshotGrabber != null) {
-            screenshotGrabber.setRunning(false);
-            screenshotGrabber = null;
+        if (flightScreenshotGrabber != null) {
+            flightScreenshotGrabber.setRunning(false);
+            flightScreenshotGrabber = null;
         }
 
       //  flightEnded();
@@ -135,7 +135,7 @@ public class AutoTracker implements TrackerListener {
         currentFlight.setId(FlightSimLogController.getInstance().getLogbook().getNextFlightId());
 
         currentFlight.setFlightSim(FlightSimLogController.getInstance().getLogbook().getDefaultFlightsim());
-        currentFlight.setCategory(FlightSimLogController.getInstance().getLogbook().getCategories().get(0));
+        currentFlight.setCategory(FlightSimLogController.getInstance().getLogbook().getAutotrackerCategory());
         currentFlight.setComputerDepartureTime(Calendar.getInstance());
         try {
             String file = ClassLoader.getSystemResource("FlightStarted.mp3").toURI().toString();
@@ -152,8 +152,8 @@ public class AutoTracker implements TrackerListener {
 
         inFlight = true;
 
-        screenshotGrabber = new ScreenshotGrabber(currentFlight);
-        screenshotGrabber.start();
+        flightScreenshotGrabber = new FlightScreenshotGrabber(currentFlight);
+        flightScreenshotGrabber.start();
 
     }
 
@@ -175,8 +175,8 @@ public class AutoTracker implements TrackerListener {
 
 
     private void flightEnded() {
-        screenshotGrabber.setRunning(false);
-        screenshotGrabber = null;
+        flightScreenshotGrabber.setRunning(false);
+        flightScreenshotGrabber = null;
 
         if (currentFlight != null) {
 

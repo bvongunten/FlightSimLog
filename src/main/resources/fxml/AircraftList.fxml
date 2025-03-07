@@ -15,8 +15,7 @@
             <Label layoutX="25.0" layoutY="17.0" prefHeight="17.0" prefWidth="63.0" text="Filter" />
             <TextField fx:id="txtFilter" layoutX="109.0" layoutY="13.0" prefHeight="25.0" prefWidth="209.0" />
             <ChoiceBox fx:id="cbFilterType" layoutX="333.0" layoutY="13.0" prefHeight="25.0" prefWidth="194.0" />
-            <ChoiceBox fx:id="cbFilterSeating" layoutX="545.0" layoutY="13.0" prefHeight="25.0" prefWidth="194.0" />
-            <CheckBox fx:id="cbShowOutdated" layoutX="757.0" layoutY="17.0" mnemonicParsing="false" selected="true" text="Show outdated" />
+            <CheckBox fx:id="cbShowOutdated" layoutX="544.0" layoutY="17.0" mnemonicParsing="false" selected="true" text="Show unavailable" />
          </children>
       </Pane>
    </top>

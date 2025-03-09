@@ -6,7 +6,6 @@ Catalonia,Barcelona,41.390780007274266, 2.1665267301955904,BA,Europe
 Spain,Madrid,40.4,-3.683333,ES,Europe
 Portugal,Lisbon,38.71666667,-9.133333,PT,Europe
 Gibraltar,Gibraltar,36.13333333,-5.35,GI,Europe
-Algeria,Algiers,36.75,3.05,DZ,Africa
 Morocco,Rabat,34.01666667,-6.816667,MA,Africa
 Western Sahara,El-Aaiún,27.153611,-13.203333,EH,Africa
 Mauritania,Nouakchott,18.06666667,-15.966667,MR,Africa
@@ -45,9 +44,8 @@ Zimbabwe,Harare,-17.81666667,31.033333,ZW,Africa
 Zambia,Lusaka,-15.41666667,28.283333,ZM,Africa
 Malawi,Lilongwe,-13.96666667,33.783333,MW,Africa
 Madagascar,Antananarivo,-18.91666667,47.516667,MG,Africa
+Réunion,Saint-Denise,-20.895019137390026,55.46844948304769,RE,Africa
 Mauritius,Port Louis,-20.15,57.483333,MU,Africa
-French Southern and Antarctic Lands,Port-aux-Français,-49.35,70.216667,TF,Antarctica
-Heard Island and McDonald Islands,N/A,-53.089702784373635, 73.5308074194847,HM,Antarctica
 Seychelles,Victoria,-4.616666667,55.45,SC,Africa
 Comoros,Moroni,-11.7,43.233333,KM,Africa
 Tanzania,Dar es Salaam,-6.8,39.283333,TZ,Africa
@@ -160,8 +158,6 @@ Peru,Lima,-12.05,-77.05,PE,South America
 Bolivia,La Paz,-16.5,-68.15,BO,South America
 Chile,Santiago,-33.45,-70.666667,CL,South America
 Falkland Islands,Stanley,-51.7,-57.85,FK,South America
-Antarctica,N/A,-77.873696,-34.627588,AQ,Antarctica
-South Georgia and South Sandwich Islands,King Edward Point,-54.283333,-36.5,GS,Antarctica
 Argentina,Buenos Aires,-34.58333333,-58.666667,AR,South America
 Uruguay,Montevideo,-34.85,-56.166667,UY,South America
 Paraguay,Asuncion,-25.26666667,-57.666667,PY,South America
@@ -232,6 +228,12 @@ Bulgaria,Sofia,42.68333333,23.316667,BG,Europe
 Kosovo,Pristina,42.66666667,21.166667,KO,Europe
 Macedonia,Skopje,42,21.433333,MK,Europe
 Greece,Athens,37.98333333,23.733333,GR,Europe
+Malta,Valletta,35.88333333,14.5,MT,Europe
+Libya,Tripoli,32.88333333,13.166667,LY,Africa
+Algeria,Algiers,36.75,3.05,DZ,Africa
+Tunisia,Tunis,36.8,10.183333,TN,Africa
+Italy,Rome,41.9,12.483333,IT,Europe
+Vatican City,Vatican City,41.9,12.45,VA,Europe
 Albania,Tirana,41.31666667,19.816667,AL,Europe
 Montenegro,Podgorica,42.43333333,19.266667,ME,Europe
 Bosnia and Herzegovina,Sarajevo,43.86666667,18.416667,BA,Europe
@@ -242,9 +244,4 @@ Austria,Vienna,48.2,16.366667,AT,Europe
 Croatia,Zagreb,45.8,16,HR,Europe
 Slovenia,Ljubljana,46.05,14.516667,SI,Europe
 San Marino,San Marino,43.93333333,12.416667,SM,Europe
-Italy,Rome,41.9,12.483333,IT,Europe
-Vatican City,Vatican City,41.9,12.45,VA,Europe
-Malta,Valletta,35.88333333,14.5,MT,Europe
-Libya,Tripoli,32.88333333,13.166667,LY,Africa
-Tunisia,Tunis,36.8,10.183333,TN,Africa
 Liechtenstein,Vaduz,47.13333333,9.516667,LI,Europe

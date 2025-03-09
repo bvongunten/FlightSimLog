@@ -1,118 +1,54 @@
 package ch.nostromo.flightsimlog.utils;
 
-
-import ch.nostromo.flightsimlog.FlightSimLogException;
 import ch.nostromo.flightsimlog.data.coordinates.Coordinates;
-import ch.nostromo.flightsimlog.data.coordinates.WorldPosition;
-import ch.nostromo.flightsimlog.data.flight.Flight;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import ch.nostromo.flightsimlog.utils.CsvContent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.geojson.*;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static java.lang.Math.*;
 
-public class GeoJson {
 
-    public static String createGeoJson(Flight flight, boolean includePath, boolean detailPath) {
-        return createGeoJson(new ArrayList<>(List.of(flight)), includePath, detailPath);
-    }
+public class CapitalPlotter {
 
-    public static String createGeoJson(List<Flight> flights, boolean includePath, boolean detailPath) {
+
+
+    public static void main(String... args) throws IOException, URISyntaxException {
+        Path path = Paths.get(ClassLoader.getSystemResource("capitals.csv").toURI());
+
+        CsvContent csvContent = new CsvContent(path, 6);
+
         FeatureCollection featureCollection = new FeatureCollection();
 
-        Set<String> visitedIcaos = new HashSet<>();
-
-        for (Flight flight : flights) {
-            addPosition(featureCollection, visitedIcaos, flight.getDeparturePosition());
-            addPosition(featureCollection, visitedIcaos, flight.getArrivalPosition());
-
-            if (includePath) {
-                addPath(featureCollection, flight, detailPath);
-            }
-
-        }
-
-
-        try {
-            return new ObjectMapper().writeValueAsString(featureCollection);
-        } catch (JsonProcessingException e) {
-            throw new FlightSimLogException("unable to create json", e);
-        }
-    }
-
-    public static String createGeoJson(List<Coordinates> coordinates) {
-        FeatureCollection featureCollection = new FeatureCollection();
-
-        addPath(featureCollection, coordinates);
-
-        try {
-            return new ObjectMapper().writeValueAsString(featureCollection);
-        } catch (JsonProcessingException e) {
-            throw new FlightSimLogException("unable to create json", e);
-        }
-
-    }
-
-
-    private static void addPosition(FeatureCollection featureCollection, Set<String> visitedIcaos, WorldPosition position) {
-
-        String icao = position.getIcao();
-        if (icao == null) {
-            icao = "";
-        }
-
-        String description = position.getDescription();
-
-        if (!icao.isEmpty() && visitedIcaos.contains(icao)) {
-            return;
-        }
-
-        visitedIcaos.add(icao);
-        Feature feature = new Feature();
-
-        Point point = new Point();
-        point.setCoordinates(new LngLatAlt(position.getCoordLon(), position.getCoordLat()));
-        feature.setGeometry(point);
-
-        if (icao.isEmpty()) {
-            feature.setProperty("name", description);
-        } else {
-            feature.setProperty("name", icao + " - " + description);
-        }
-
-        featureCollection.add(feature);
-
-    }
-
-    private static void addPath(FeatureCollection featureCollection, Flight flight, boolean detailPath) {
         List<Coordinates> coordinates = new ArrayList<>();
 
-        if (flight.getSimulationData().getMeasurements().size() > 1 && detailPath) {
-            coordinates.addAll(flight.getSimulationData().getMeasurements());
-        } else {
-            coordinates.add(flight.getDeparturePosition());
-            coordinates.add(flight.getArrivalPosition());
+        for (int i = 0; i < csvContent.getValues().size(); i++) {
+            List<String> currentEntry = csvContent.getValues().get(i);
+            Coordinates coordinate = new Coordinates(Double.parseDouble(currentEntry.get(2)), Double.parseDouble(currentEntry.get(3)), 0.0);
+            coordinates.add(coordinate);
+
+            Feature feature = new Feature();
+            Point point = new Point();
+            point.setCoordinates(new LngLatAlt(coordinate.getCoordLon(), coordinate.getCoordLat()));
+            feature.setProperty("name", currentEntry.get(0) + " - " + currentEntry.get(1));
+            feature.setGeometry(point);
+            featureCollection.add(feature);
+
         }
 
-        addPath(featureCollection, coordinates);
-
-    }
-
-    public static void addPath(FeatureCollection featureCollection, List<Coordinates> coordinates) {
-
         Coordinates lastCoordinates = null;
-
-        Feature mainLineFeature = new Feature();
-        LineString lineString = new LineString();
 
         for (Coordinates coordinate : coordinates) {
 
             if (lastCoordinates != null) {
+                Feature lineFeature = new Feature();
+                LineString line = new LineString();
 
                 double lonDifference = Math.abs(coordinate.getCoordLon() - lastCoordinates.getCoordLon());
 
@@ -120,64 +56,63 @@ public class GeoJson {
 
                     if (lastCoordinates.getCoordLon() > 0 && coordinate.getCoordLon() < 0) {
                         // Crossing from + to -
-                        Feature firstLineFeature = new Feature();
                         LineString firstLine = new LineString();
-
                         firstLine.getCoordinates().add(new LngLatAlt(lastCoordinates.getCoordLon(), lastCoordinates.getCoordLat()));
                         firstLine.getCoordinates().add(new LngLatAlt(179.9, vincentyLat(lastCoordinates.getCoordLat(), lastCoordinates.getCoordLon(), 179.9, coordinate.getCoordLat(), coordinate.getCoordLon())));
-
-                        firstLineFeature.setGeometry(firstLine);
-                        featureCollection.add(firstLineFeature);
+                        lineFeature.setGeometry(firstLine);
+                        featureCollection.add(lineFeature);
 
                         Feature secondLineFeature = new Feature();
                         LineString secondLine = new LineString();
-
                         secondLine.getCoordinates().add(new LngLatAlt(-179.9, vincentyLat(lastCoordinates.getCoordLat(), lastCoordinates.getCoordLon(), -179.9, coordinate.getCoordLat(), coordinate.getCoordLon())));
                         secondLine.getCoordinates().add(new LngLatAlt(coordinate.getCoordLon(), coordinate.getCoordLat()));
-
                         secondLineFeature.setGeometry(secondLine);
                         featureCollection.add(secondLineFeature);
 
                     } else if (lastCoordinates.getCoordLon() < 0 && coordinate.getCoordLon() > 0) {
                         // Crossing from - to +
-                        Feature firstLineFeature = new Feature();
                         LineString firstLine = new LineString();
-
                         firstLine.getCoordinates().add(new LngLatAlt(lastCoordinates.getCoordLon(), lastCoordinates.getCoordLat()));
                         firstLine.getCoordinates().add(new LngLatAlt(-179.9, vincentyLat(lastCoordinates.getCoordLat(), lastCoordinates.getCoordLon(), -179.9, coordinate.getCoordLat(), coordinate.getCoordLon())));
-
-                        firstLineFeature.setGeometry(firstLine);
-                        featureCollection.add(firstLineFeature);
+                        lineFeature.setGeometry(firstLine);
+                        featureCollection.add(lineFeature);
 
                         Feature secondLineFeature = new Feature();
                         LineString secondLine = new LineString();
-
                         secondLine.getCoordinates().add(new LngLatAlt(179.9, vincentyLat(lastCoordinates.getCoordLat(), lastCoordinates.getCoordLon(), 179.9, coordinate.getCoordLat(), coordinate.getCoordLon())));
                         secondLine.getCoordinates().add(new LngLatAlt(coordinate.getCoordLon(), coordinate.getCoordLat()));
-
                         secondLineFeature.setGeometry(secondLine);
                         featureCollection.add(secondLineFeature);
                     }
 
                 } else {
-
-                    lineString.getCoordinates().add(new LngLatAlt(lastCoordinates.getCoordLon(), lastCoordinates.getCoordLat()));
-                    lineString.getCoordinates().add(new LngLatAlt(coordinate.getCoordLon(), coordinate.getCoordLat()));
-
+                    // If no crossing, just create one line
+                    line.getCoordinates().add(new LngLatAlt(lastCoordinates.getCoordLon(), lastCoordinates.getCoordLat()));
+                    line.getCoordinates().add(new LngLatAlt(coordinate.getCoordLon(), coordinate.getCoordLat()));
+                    lineFeature.setGeometry(line);
+                    featureCollection.add(lineFeature);
                 }
             }
 
-            lastCoordinates = coordinate;
 
+
+
+            // Update the last known coordinates and label for the next iteration
+            lastCoordinates = coordinate;
         }
 
-        mainLineFeature.setGeometry(lineString);
-        featureCollection.add(mainLineFeature);
+        System.out.println(new ObjectMapper().writeValueAsString(featureCollection));
     }
-
 
     /**
      * Vincenty's formulae to calculate the latitude at an intermediate longitude.
+     *
+     * @param lat1            Latitude of the starting point
+     * @param lon1            Longitude of the starting point
+     * @param lonIntermediate The intermediate longitude to calculate latitude for
+     * @param lat2            Latitude of the end point
+     * @param lon2            Longitude of the end point
+     * @return Interpolated latitude at the intermediate longitude
      */
     private static double vincentyLat(double lat1, double lon1, double lonIntermediate, double lat2, double lon2) {
         // Convert degrees to radians
@@ -217,5 +152,6 @@ public class GeoJson {
 
         return toDegrees(atan2(sinU1 + sinU2, sqrt((cosU1 + cosU2) * (cosU1 + cosU2) + cos2SigmaM * cos2SigmaM)));
     }
+
 
 }

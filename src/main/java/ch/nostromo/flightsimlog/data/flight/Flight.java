@@ -56,6 +56,9 @@ public class Flight {
     @XmlElement
     Boolean realTime = Boolean.TRUE;
 
+    @XmlElement
+    String remarks = "";
+
     @XmlTransient
     SimulationData simulationData = null;
 
@@ -105,6 +108,7 @@ public class Flight {
 
         realTime = input.realTime;
 
+        remarks = input.remarks;
 
         if (input.getSimulationData() != null) {
             simulationData = getSimulationData();

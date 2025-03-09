@@ -106,6 +106,9 @@ public class FlightController {
     private Button btnImageGrabber;
 
 
+    @FXML
+    private TextArea txtRemarks;
+
     Flight flight;
 
     @FXML
@@ -159,6 +162,8 @@ public class FlightController {
         this.cbRealTime.setSelected(flight.getRealTime());
 
         this.txtId.setText(flight.getId());
+
+        this.txtRemarks.setText(flight.getRemarks());
 
         addChangeListeners(txtDepartureLat, txtDepartureLon, txtDepartureTime, txtArrivalLon, txtArrivalLat, txtArrivalTime, txtComputerArrivalTime, txtDepartureTime);
 
@@ -248,6 +253,8 @@ public class FlightController {
             flight.setRealTime(cbRealTime.isSelected());
 
             flight.setSimAircraft(FlightSimLogController.getInstance().getOrCreateSimAircraft(cbAircraft.getEditor().getText()));
+
+            flight.setRemarks(txtRemarks.getText());
 
         } catch (Exception e) {
             FlightSimLogController.getInstance().showWarning("Bind failed with error: " + e.getMessage());
